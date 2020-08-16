@@ -4,8 +4,15 @@ div.title-id-input {
         margin-bottom: 5px;
 
         small {
-            color: rgba(255, 255, 255, .5);
             font-size: x-small;
+
+            @media (prefers-color-scheme: light) {
+                color: rgba(0, 0, 0, .5);
+            }
+
+            @media (prefers-color-scheme: dark) {
+                color: rgba(255, 255, 255, .5);
+            }
         }
     }
 
