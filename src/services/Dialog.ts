@@ -26,4 +26,13 @@ export class Dialog {
         }
         return result[0];
     }
+
+    public static Error(title: string, body: string, detail?: string): void {
+        remote.dialog.showMessageBoxSync(remote.BrowserWindow.getFocusedWindow(), {
+            type: 'error',
+            title: title,
+            message: body,
+            detail: detail,
+        });
+    }
 }

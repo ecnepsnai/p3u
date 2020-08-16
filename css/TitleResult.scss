@@ -18,6 +18,12 @@
                 border-radius: 5px;
                 padding: .5em;
                 user-select: none;
+                @media (prefers-color-scheme: light) {
+                    color: #ffffff;
+                }
+                @media (prefers-color-scheme: dark) {
+                    color: #000000;
+                }
 
                 &.active {
                     &:hover {

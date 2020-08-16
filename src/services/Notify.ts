@@ -1,7 +1,9 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 
 export class Notify {
     public static Now(): void {
-        ipcRenderer.send('alert', '');
+        if (!remote.BrowserWindow.getFocusedWindow) {
+            ipcRenderer.send('alert', '');
+        }
     }
 }

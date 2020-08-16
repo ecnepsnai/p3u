@@ -144,8 +144,11 @@ ipcMain.handle('lookup_title', async (event, args) => {
 });
 
 ipcMain.on('alert', () => {
-  app.dock.bounce();
-  mainWindow.once('focus', () => { mainWindow.flashFrame(false); })
-  mainWindow.flashFrame(true);
+  if (process.platform !== 'darwin') {
+    mainWindow.once('focus', () => { mainWindow.flashFrame(false); })
+    mainWindow.flashFrame(true);
+  } else {
+    app.dock.bounce();
+  }
   shell.beep();
 });

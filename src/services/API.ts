@@ -16,6 +16,7 @@ export class API {
         return new Promise((resolve, reject) => {
             try {
                 let written = 0;
+                console.log('Downloading file', url, filePath);
                 const request = http.get(url, resp => {
                     const total = parseInt(resp.headers['content-length']);
                     resp.on('data', chunk => {
@@ -24,22 +25,26 @@ export class API {
                         progressCallback((written/total) * 100);
                     });
                     resp.on('end', () => {
+                        console.info('Downloaded file', url);
                         fs.closeSync(f);
                         resolve();
                     });
 
                     resp.on('error', e => {
                         console.error(e);
+                        fs.closeSync(f);
                         reject(e);
                     });
                 });
                 request.on('error', e => {
                     console.error(e);
+                    fs.closeSync(f);
                     reject(e);
                 });
                 request.end();
             } catch (e) {
                 console.error(e);
+                fs.closeSync(f);
                 reject(e);
             }
         });

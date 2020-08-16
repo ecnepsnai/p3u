@@ -51,6 +51,8 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
             if (success) {
                 Notify.Now();
             }
+        }, e => {
+            Dialog.Error('Error Downloading Package', 'An error occured while downloading the update package. Please try again later.', JSON.stringify(e));
         });
     }
 
