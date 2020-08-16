@@ -1,0 +1,60 @@
+.package {
+    display: flex;
+    justify-content: space-between;
+    padding: .5em;
+    margin: .5em 0;
+    background-color: rgba(0, 128, 255, 0.25);
+    border-radius: 5px;
+
+    .info {
+        span.property {
+            display: block;
+
+            span.label {
+                color: rgba(255, 255, 255, .5);
+            }
+            span.value {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .controls {
+        .package-button {
+            border: solid 2px #0080ff;
+            background: -webkit-linear-gradient(-135deg,#49a4ff 25%,#0074e7 100%);
+            box-shadow: 0 10px 16px 0 rgba(0,116,231,.2);
+            border-radius: 5px;
+            padding: .5em;
+            user-select: none;
+
+            &.button-download {
+                &:hover {
+                    border: solid 2px #80bfff;
+                    cursor: pointer;
+                }
+            }
+
+            &.button-disabled {
+                cursor: default;
+            }
+
+            &.button-success {
+                opacity: 50%;
+                cursor: not-allowed;
+            }
+
+            progress {
+                -webkit-appearance: none;
+
+                &::-webkit-progress-bar {
+                    background-color: #204061;
+                }
+
+                &::-webkit-progress-value {
+                    background-color: #80bfff;
+                }
+            }
+        }
+    }
+}

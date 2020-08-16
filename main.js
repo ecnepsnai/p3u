@@ -1,11 +1,12 @@
 const path = require('path');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const https = require('https');
 const xml2js = require('xml2js');
 
+let mainWindow;
 function createWindow () {
   // Create the browser window.
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -16,10 +17,10 @@ function createWindow () {
   });
 
   // and load the index.html of the app.
-  win.loadFile(path.join(__dirname, 'build', 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, 'build', 'index.html'));
 
   // Open the DevTools.
-  win.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -116,19 +117,35 @@ ipcMain.handle('lookup_title', async (event, args) => {
     packages: [],
   };
   parser.parseString(xmlData, function (err, result) {
-    result.titlepatch.tag[0].package.forEach(elm => {
-      const pkg = elm.$;
-      title.packages.push({
-        version: pkg.version,
-        size: parseInt(pkg.size),
-        sha1_sum: pkg.sha1sum,
-        url: pkg.url,
+    if (!result || !result.titlepatch) {
+      throw new Error('No updates for package');
+    }
+
+    try {
+      result.titlepatch.tag[0].package.forEach(elm => {
+        const pkg = elm.$;
+        title.packages.push({
+          version: pkg.version,
+          size: parseInt(pkg.size),
+          sha1_sum: pkg.sha1sum,
+          url: pkg.url,
+        });
+        if (elm.paramsfo) {
+          const info = elm.paramsfo[0];
+          title.name = info.TITLE[0];
+        }
       });
-      if (elm.paramsfo) {
-        const info = elm.paramsfo[0];
-        title.name = info.TITLE[0];
-      }
-    });
+    } catch (e) {
+      console.error('Error parsing XML for title', e);
+      throw e;
+    }
   });
   return title;
+});
+
+ipcMain.on('alert', () => {
+  app.dock.bounce();
+  mainWindow.once('focus', () => { mainWindow.flashFrame(false); })
+  mainWindow.flashFrame(true);
+  shell.beep();
 });

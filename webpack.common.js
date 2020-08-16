@@ -12,6 +12,9 @@ module.exports = {
                 { from: 'img/*.png', to: 'assets/', noErrorOnMissing: true},
                 { from: 'img/*.svg', to: 'assets/', noErrorOnMissing: true},
                 { from: 'img/*.jpg', to: 'assets/', noErrorOnMissing: true},
+                { from: 'img/*.jpg', to: 'assets/', noErrorOnMissing: true},
+                { from: 'node_modules/fontsource-fira-sans/index.css', to: 'fonts/' },
+                { from: 'node_modules/fontsource-fira-sans/files/*.woff2', flatten: true, to: 'fonts/files/' },
             ]
         })
     ],

@@ -1,0 +1,29 @@
+* {
+    font-family: 'Fira Sans', sans-serif;
+}
+
+span.ml-1 {
+    margin-left: 5px;
+}
+
+.title-error {
+    margin-top: 5px;
+
+    svg {
+        color: #e74c3c;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    html,
+    body {
+        color: #000000;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html,
+    body {
+        color: #ffffff;
+    }
+}

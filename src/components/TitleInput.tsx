@@ -1,4 +1,6 @@
 import * as React from 'react';
+import '../../css/TitleInput.scss';
+import { Icon } from './Icon';
 
 export interface TitleInputProps {
     onSubmit: (titleID: string) => void;
@@ -27,9 +29,13 @@ export class TitleInput extends React.Component<TitleInputProps, TitleInputState
         return (
             <div className="title-id-input">
                 <form onSubmit={this.formSubmit}>
-                    <label>Title ID</label>
-                    <input type="text" placeholder="BCUS98114" onChange={this.titleIDChange} required disabled={this.props.disabled}/>
-                    <button type="submit" disabled={this.props.disabled}>Lookup</button>
+                    <label>Game ID <small>Can be found on the side of any game package at the bottom</small></label>
+                    <div className="search-box">
+                        <div className="search-box-icon">
+                            <Icon.Search />
+                        </div>
+                        <input type="text" placeholder="Example: BCUS98114" onChange={this.titleIDChange} required disabled={this.props.disabled}/>
+                    </div>
                 </form>
             </div>
         );

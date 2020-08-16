@@ -23,6 +23,8 @@
     "electron": "9.2.0",
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.3",
+    "fontsource-fira-sans": "^3.0.5",
+    "fontsource-fira-sans-condensed": "^3.0.5",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "prop-types": "^15.7.2",
