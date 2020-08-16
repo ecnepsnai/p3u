@@ -10,7 +10,7 @@ export class API {
         });
     }
 
-    public static DownloadPackage(url: string, filePath: string, progressCallback: (perc: number) => void): Promise<boolean> {
+    public static DownloadPackage(url: string, filePath: string, progressCallback: (perc: number) => void): Promise<void> {
         const f = fs.openSync(filePath, 'w');
 
         return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ export class API {
                     });
                     resp.on('end', () => {
                         fs.closeSync(f);
-                        resolve(true);
+                        resolve();
                     });
 
                     resp.on('error', e => {
