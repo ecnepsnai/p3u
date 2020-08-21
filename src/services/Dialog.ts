@@ -1,38 +1,25 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
+
+interface SaveFileDialogResult {
+    canceled: boolean;
+    filePath: string;
+}
+
+interface SelectFolderDialogResult {
+    canceled: boolean;
+    filePaths: string[];
+}
 
 export class Dialog {
-    public static SavePackage(defaultName: string): string {
-        return remote.dialog.showSaveDialogSync(remote.BrowserWindow.getFocusedWindow(), {
-            title: 'Save Update Package',
-            buttonLabel: 'Save',
-            defaultPath: defaultName,
-            filters: [
-                {
-                    name: 'Playstation 3 Package',
-                    extensions: [ 'pkg' ]
-                }
-            ]
-        });
+    public static SavePackage(defaultName: string): Promise<SaveFileDialogResult> {
+        return ipcRenderer.invoke('save_single_package', [defaultName]);
     }
 
-    public static SaveAllPackages(): string {
-        const result = remote.dialog.showOpenDialogSync(remote.BrowserWindow.getFocusedWindow(), {
-            title: 'Select Download Location',
-            buttonLabel: 'Download Packages',
-            properties: [ 'openDirectory', 'createDirectory' ]
-        });
-        if (!result) {
-            return null;
-        }
-        return result[0];
+    public static SaveAllPackages(): Promise<SelectFolderDialogResult> {
+        return ipcRenderer.invoke('save_multiple_packages');
     }
 
     public static Error(title: string, body: string, detail?: string): void {
-        remote.dialog.showMessageBoxSync(remote.BrowserWindow.getFocusedWindow(), {
-            type: 'error',
-            title: title,
-            message: body,
-            detail: detail,
-        });
+        ipcRenderer.invoke('error_dialog', [title, body, detail]).then();
     }
 }

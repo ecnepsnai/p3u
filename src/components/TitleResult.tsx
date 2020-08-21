@@ -5,6 +5,7 @@ import '../../css/TitleResult.scss';
 import { Icon } from './Icon';
 import { Dialog } from '../services/Dialog';
 import { Notify } from '../services/Notify';
+import { Button } from './Button';
 
 export interface TitleResultProps {
     title: Title;
@@ -18,14 +19,19 @@ export class TitleResult extends React.Component<TitleResultProps, TitleResultSt
     constructor(props: TitleResultProps) {
         super(props);
         this.state = {};
+        this.props.title.packages.forEach(pkg => {
+            this.packageDownloaded[pkg.version] = false;
+        });
     }
     private packageDownloaded: {[id: string]: boolean} = {};
 
     private downloadAll = () => {
-        const downloadDir = Dialog.SaveAllPackages();
-        this.setState({ isDownloading: true, downloadToDir: downloadDir });
-        this.props.title.packages.forEach(pkg => {
-            this.packageDownloaded[pkg.version] = false;
+        Dialog.SaveAllPackages().then(results => {
+            if (results.canceled) {
+                return;
+            }
+
+            this.setState({ isDownloading: true, downloadToDir: results.filePaths[0] });
         });
     }
 
@@ -48,28 +54,14 @@ export class TitleResult extends React.Component<TitleResultProps, TitleResultSt
         }
     }
 
-    private downloadAllButton = () => {
-        let className = 'download-all-button';
-        if (this.state.isDownloading) {
-            className += ' disabled';
-        } else {
-            className += ' active';
-        }
-        return (
-            <div className="button-wrapper">
-                <div className={className} onClick={this.downloadAll}>
-                    <Icon.Label icon={<Icon.Download/>} label="Download All" />
-                </div>
-            </div>
-        );
-    }
-
     render(): JSX.Element {
         return (
             <div className="title-result">
                 <div className="title-title">
                     <h2>{ this.props.title.name }</h2>
-                    { this.downloadAllButton() }
+                    <Button onClick={this.downloadAll} disabled={this.state.isDownloading||this.state.finished}>
+                        <Icon.Label icon={<Icon.Download/>} label="Download All" />
+                    </Button>
                 </div>
                 <div className="package-list">
                     {

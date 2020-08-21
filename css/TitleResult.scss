@@ -9,34 +9,5 @@
         h2 {
             margin: 0;
         }
-
-        .button-wrapper {
-            .download-all-button {
-                border: solid 2px #0080ff;
-                background: -webkit-linear-gradient(-135deg,#49a4ff 25%,#0074e7 100%);
-                box-shadow: 0 10px 16px 0 rgba(0,116,231,.2);
-                border-radius: 5px;
-                padding: .5em;
-                user-select: none;
-                @media (prefers-color-scheme: light) {
-                    color: #ffffff;
-                }
-                @media (prefers-color-scheme: dark) {
-                    color: #000000;
-                }
-
-                &.active {
-                    &:hover {
-                        border: solid 2px #80bfff;
-                        cursor: pointer;
-                    }
-                }
-
-                &.disabled {
-                    opacity: 50%;
-                    cursor: default;
-                }
-            }
-        }
     }
 }

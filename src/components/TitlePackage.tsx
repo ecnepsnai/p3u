@@ -3,10 +3,12 @@ import { Package } from '../types/Title';
 import { Downloader } from '../services/Downloader';
 import { Formatter } from '../services/Formatter';
 import { Icon } from './Icon';
-import '../../css/TitlePackage.scss';
 import { Dialog } from '../services/Dialog';
 import path = require('path');
 import { Notify } from '../services/Notify';
+import { Button } from './Button';
+import { Progress } from './Progress';
+import '../../css/TitlePackage.scss';
 
 export interface TitlePackageProps {
     package: Package;
@@ -42,17 +44,18 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
             return;
         }
 
-        const filePath = Dialog.SavePackage(this.packageName());
-        if (!filePath) {
-            return;
-        }
-
-        this.startDownload(filePath).then(success => {
-            if (success) {
-                Notify.Now();
+        Dialog.SavePackage(this.packageName()).then(result => {
+            if (result.canceled) {
+                return;
             }
-        }, e => {
-            Dialog.Error('Error Downloading Package', 'An error occured while downloading the update package. Please try again later.', JSON.stringify(e));
+
+            this.startDownload(result.filePath).then(success => {
+                if (success) {
+                    Notify.Now();
+                }
+            }, e => {
+                Dialog.Error('Error Downloading Package', 'An error occured while downloading the update package. Please try again later.', JSON.stringify(e));
+            });
         });
     }
 
@@ -79,7 +82,7 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
         );
         if (this.state.isDownloading) {
             content = (
-                <progress max="100" value={this.state.percent}> {this.state.percent}% </progress>
+                <Progress value={this.state.percent} />
             );
         } else if (this.state.finished) {
             content = (
@@ -87,19 +90,10 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
             );
         }
 
-        let className = 'package-button';
-        if (this.state.isDownloading) {
-            className += ' button-disabled';
-        } else if (this.state.finished) {
-            className += ' button-success';
-        } else {
-            className += ' button-download';
-        }
-
         return (
-            <div className={className} onClick={this.buttonClick}>
-                { content }
-            </div>
+            <Button onClick={this.buttonClick} disabled={this.state.isDownloading||this.state.finished}>
+                {content}
+            </Button>
         );
     }
 

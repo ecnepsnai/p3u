@@ -1,5 +1,5 @@
 const path = require('path');
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const https = require('https');
 const xml2js = require('xml2js');
 if (require('electron-squirrel-startup')) return;
@@ -79,7 +79,6 @@ function createWindow () {
     width: 800,
     height: 400,
     webPreferences: {
-      enableRemoteModule: true,
       worldSafeExecuteJavaScript: true,
       nodeIntegration: true
     },
@@ -221,7 +220,55 @@ ipcMain.handle('lookup_title', async (event, args) => {
   return title;
 });
 
+ipcMain.handle('save_single_package', async (event, args) => {
+  console.log('--> save_single_package', args);
+
+  const results = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
+    title: 'Save Update Package',
+    buttonLabel: 'Save',
+    defaultPath: args[0],
+    filters: [{
+      name: 'Playstation 3 Package',
+      extensions: [ 'pkg' ]
+    }]
+  });
+
+  console.log('<-- save_single_package', results);
+  return results;
+});
+
+ipcMain.handle('save_multiple_packages', async (event, args) => {
+  console.log('--> save_multiple_packages', args);
+
+  const results = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
+    title: 'Select Download Location',
+    buttonLabel: 'Download',
+    properties: [ 'openDirectory', 'createDirectory' ]
+  });
+
+  console.log('<-- save_multiple_packages', results);
+  return results;
+});
+
+ipcMain.handle('error_dialog', async (event, args) => {
+  console.log('--> error_dialog', args);
+
+  const results = await dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+    type: 'error',
+    title: args[0],
+    message: args[1],
+    detail: args[2],
+  });
+
+  console.log('<-- error_dialog', results);
+  return results;
+});
+
 ipcMain.on('alert', () => {
+  if (BrowserWindow.getFocusedWindow()) {
+    return;
+  }
+
   if (process.platform !== 'darwin') {
     mainWindow.once('focus', () => { mainWindow.flashFrame(false); })
     mainWindow.flashFrame(true);
