@@ -3,7 +3,7 @@ import { Title } from './types/Title';
 import { TitleInput } from './components/TitleInput';
 import { TitleResult } from './components/TitleResult';
 import { API } from './services/API';
-import '../css/App.scss';
+import '../../css/App.scss';
 import { Icon } from './components/Icon';
 
 export interface AppProps {}

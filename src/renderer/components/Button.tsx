@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../../css/Button.scss';
+import '../../../css/Button.scss';
 
 export interface ButtonProps {
     onClick: () => (void);

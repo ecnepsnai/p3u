@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../../css/Progress.scss';
+import '../../../css/Progress.scss';
 
 export interface ProgressProps {
     value: number;

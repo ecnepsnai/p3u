@@ -4,11 +4,11 @@ import { Downloader } from '../services/Downloader';
 import { Formatter } from '../services/Formatter';
 import { Icon } from './Icon';
 import { Dialog } from '../services/Dialog';
-import path = require('path');
 import { Notify } from '../services/Notify';
 import { Button } from './Button';
 import { Progress } from './Progress';
-import '../../css/TitlePackage.scss';
+import '../../../css/TitlePackage.scss';
+import { Path } from '../services/Path';
 
 export interface TitlePackageProps {
     package: Package;
@@ -35,7 +35,7 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
 
     componentDidMount(): void {
         if (this.state.isDownloading && this.state.downloadDir) {
-            this.startDownload(path.join(this.state.downloadDir, this.packageName()));
+            this.startDownload(Path.join(this.state.downloadDir, this.packageName()));
         }
     }
 

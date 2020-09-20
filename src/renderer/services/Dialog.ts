@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+const ipcRenderer = (window as any).ipcRenderer as Electron.IpcRenderer;
 
 interface SaveFileDialogResult {
     canceled: boolean;

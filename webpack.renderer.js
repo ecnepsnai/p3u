@@ -1,12 +1,18 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+    mode: 'development',
+    devtool: 'source-map',
+    entry: './src/renderer/index.tsx',
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".html"]
+        extensions: ['.ts', '.tsx', '.js', '.html']
     },
-
     plugins: [
+        new HtmlWebpackPlugin({
+            template: 'html/index.development.html'
+        }),
         new CopyPlugin({
             patterns: [
                 { from: 'img/*.png', to: 'assets/', noErrorOnMissing: true},
@@ -15,12 +21,12 @@ module.exports = {
                 { from: 'img/*.jpg', to: 'assets/', noErrorOnMissing: true},
                 { from: 'node_modules/fontsource-fira-sans/index.css', to: 'fonts/' },
                 { from: 'node_modules/fontsource-fira-sans/files/*latin*.woff2', flatten: true, to: 'fonts/files/' },
+                { from: 'node_modules/react/umd/react.development.js', to: 'assets/js/' },
+                { from: 'node_modules/react-dom/umd/react-dom.development.js', to: 'assets/js/' },
             ]
         })
     ],
-
     target: 'electron-renderer',
-
     module: {
         rules: [
             {
@@ -28,40 +34,31 @@ module.exports = {
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: "ts-loader"
+                        loader: 'ts-loader'
                     }
                 ]
             },
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             {
-                enforce: "pre",
+                enforce: 'pre',
                 test: /\.js$/,
-                loader: "source-map-loader"
+                loader: 'source-map-loader'
             },
             {
                 test: /\.s[ac]ss$/i,
                 use: [
-                    // Creates `style` nodes from JS strings
                     'style-loader',
-                    // Translates CSS into CommonJS
                     'css-loader',
-                    // Compiles Sass to CSS
                     'sass-loader',
                 ],
             },
         ]
     },
-
-    // When importing a module whose path matches one of the following, just
-    // assume a corresponding global variable exists and use that instead.
-    // This is important because it allows us to avoid bundling all of our
-    // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
         'react': 'React',
         'react-dom': 'ReactDOM',
     },
-
     output: {
-        path: path.resolve(__dirname, 'build'),
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'app.js',
     },
 };

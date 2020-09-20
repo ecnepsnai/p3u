@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../../css/TitleInput.scss';
+import '../../../css/TitleInput.scss';
 import { Icon } from './Icon';
 
 export interface TitleInputProps {
@@ -34,7 +34,7 @@ export class TitleInput extends React.Component<TitleInputProps, TitleInputState
                         <div className="search-box-icon">
                             <Icon.Search />
                         </div>
-                        <input type="text" placeholder="Example: BCUS98114" onChange={this.titleIDChange} required disabled={this.props.disabled}/>
+                        <input type="text" placeholder="Example: BCUS98114" value="BCUS98296" onChange={this.titleIDChange} required disabled={this.props.disabled}/>
                     </div>
                 </form>
             </div>

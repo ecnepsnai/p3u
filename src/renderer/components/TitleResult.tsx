@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Title, Package } from '../types/Title';
 import { TitlePackage } from './TitlePackage';
-import '../../css/TitleResult.scss';
+import '../../../css/TitleResult.scss';
 import { Icon } from './Icon';
 import { Dialog } from '../services/Dialog';
 import { Notify } from '../services/Notify';
