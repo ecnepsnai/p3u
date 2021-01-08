@@ -3,12 +3,12 @@ import { Package } from '../types/Title';
 import { Downloader } from '../services/Downloader';
 import { Formatter } from '../services/Formatter';
 import { Icon } from './Icon';
-import { Dialog } from '../services/Dialog';
 import { Notify } from '../services/Notify';
 import { Button } from './Button';
 import { Progress } from './Progress';
 import '../../../css/TitlePackage.scss';
 import { Path } from '../services/Path';
+import { IPC } from '../services/IPC';
 
 export interface TitlePackageProps {
     package: Package;
@@ -44,7 +44,7 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
             return;
         }
 
-        Dialog.SavePackage(this.packageName()).then(result => {
+        IPC.saveSinglePackage(this.packageName()).then(result => {
             if (result.canceled) {
                 return;
             }
@@ -54,7 +54,8 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
                     Notify.Now();
                 }
             }, e => {
-                Dialog.Error('Error Downloading Package', 'An error occured while downloading the update package. Please try again later.', JSON.stringify(e));
+                console.error('Error downloading package', e);
+                IPC.errorDialog('Error Downloading Package', 'An error occurred while downloading the update package. Please try again later.', JSON.stringify(e));
             });
         });
     }

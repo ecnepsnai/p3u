@@ -19,13 +19,14 @@ const createWindow = (): void => {
             sandbox: true,
             preload: path.join(fs.realpathSync('.'), 'dist', 'preload.js'),
             worldSafeExecuteJavaScript: true,
+            contextIsolation: true,
         },
         show: false
     });
 
     // and load the index.html of the app.
     mainWindow.loadFile('index.html').then(() => {
-        console.log('Loaded!');
+        console.log('index loaded!');
     }, e => {
         console.error('Error loading', e);
     }).catch(e => {
@@ -33,7 +34,7 @@ const createWindow = (): void => {
     });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('ready-to-show', () => {
         mainWindow.show();

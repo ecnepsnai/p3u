@@ -1,7 +1,7 @@
-const ipcRenderer = (window as any).ipcRenderer as Electron.IpcRenderer;
+import { IPC } from "./IPC";
 
 export class Notify {
     public static Now(): void {
-        ipcRenderer.send('alert');
+        IPC.alert();
     }
 }

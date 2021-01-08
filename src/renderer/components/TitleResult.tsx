@@ -3,9 +3,9 @@ import { Title, Package } from '../types/Title';
 import { TitlePackage } from './TitlePackage';
 import '../../../css/TitleResult.scss';
 import { Icon } from './Icon';
-import { Dialog } from '../services/Dialog';
 import { Notify } from '../services/Notify';
 import { Button } from './Button';
+import { IPC } from '../services/IPC';
 
 export interface TitleResultProps {
     title: Title;
@@ -26,12 +26,15 @@ export class TitleResult extends React.Component<TitleResultProps, TitleResultSt
     private packageDownloaded: {[id: string]: boolean} = {};
 
     private downloadAll = () => {
-        Dialog.SaveAllPackages().then(results => {
+        IPC.saveMultiplePackages().then(results => {
             if (results.canceled) {
                 return;
             }
 
             this.setState({ isDownloading: true, downloadToDir: results.filePaths[0] });
+        }, e => {
+            console.error(e);
+            IPC.errorDialog('Error Downloading Packages', 'An error occurred while downloading the update package. Please try again later.', JSON.stringify(e));
         });
     }
 

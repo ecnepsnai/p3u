@@ -8,23 +8,34 @@ import { Icon } from './components/Icon';
 
 export interface AppProps {}
 interface AppState {
-    loading?: boolean;
+    loading: boolean;
+    titleLoading?: boolean;
     titleError?: string;
     title?: Title;
 }
 export class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            loading: true,
+        };
+    }
+
+    componentDidMount(): void {
+        API.Test().then(() => {
+            this.setState({
+                loading: false,
+            });
+        });
     }
 
     private lookupTitle = (titleID: string) => {
-        this.setState({ loading: true, title: undefined });
+        this.setState({ titleLoading: true, title: undefined });
 
         API.LookupTitle(titleID).then(title => {
-            this.setState({ loading: false, title: title, titleError: undefined });
+            this.setState({ titleLoading: false, title: title, titleError: undefined });
         }, () => {
-            this.setState({ loading: false, titleError: 'Unknown title ID or no updates available for this title' });
+            this.setState({ titleLoading: false, titleError: 'Unknown title ID or no updates available for this title' });
         });
     }
 
@@ -47,9 +58,13 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     render(): JSX.Element {
+        if (this.state.loading) {
+            return (<div>Loading...</div>);
+        }
+
         return (
             <div>
-                <TitleInput onSubmit={this.lookupTitle} disabled={this.state.loading} />
+                <TitleInput onSubmit={this.lookupTitle} loading={this.state.titleLoading} />
                 { this.titleError() }
                 { this.results() }
             </div>

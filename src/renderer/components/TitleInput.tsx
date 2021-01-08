@@ -4,7 +4,7 @@ import { Icon } from './Icon';
 
 export interface TitleInputProps {
     onSubmit: (titleID: string) => void;
-    disabled: boolean;
+    loading: boolean;
 }
 interface TitleInputState {
     titleID?: string;
@@ -25,6 +25,15 @@ export class TitleInput extends React.Component<TitleInputProps, TitleInputState
         this.props.onSubmit(this.state.titleID);
     }
 
+    private icon = () => {
+        if (!this.props.loading) { return null; }
+        return (
+            <div className="search-box-icon">
+                <Icon.Spinner pulse />
+            </div>
+        );
+    }
+
     render(): JSX.Element {
         return (
             <div className="title-id-input">
@@ -34,7 +43,8 @@ export class TitleInput extends React.Component<TitleInputProps, TitleInputState
                         <div className="search-box-icon">
                             <Icon.Search />
                         </div>
-                        <input type="text" placeholder="Example: BCUS98114" value="BCUS98296" onChange={this.titleIDChange} required disabled={this.props.disabled}/>
+                        <input type="text" placeholder="Example: BCUS98114" onChange={this.titleIDChange} required disabled={this.props.loading}/>
+                        { this.icon() }
                     </div>
                 </form>
             </div>

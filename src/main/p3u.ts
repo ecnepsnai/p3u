@@ -39,6 +39,7 @@ function getTitleXML(titleID: string) {
     };
     options.agent = new https.Agent(options as https.AgentOptions);
     return new Promise((resolve, reject) => {
+        console.log('HTTP GET https://' + options.host + options.path);
         const request = https.request(options, resp => {
             resp.setEncoding('utf8');
             let rawData = '';
@@ -107,8 +108,6 @@ ipcMain.handle('lookup_title', async (event, args) => {
 
 
 ipcMain.handle('save_single_package', async (event, args) => {
-    console.log('--> save_single_package', args);
-
     const results = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
         title: 'Save Update Package',
         buttonLabel: 'Save',
@@ -119,26 +118,20 @@ ipcMain.handle('save_single_package', async (event, args) => {
         }]
     });
 
-    console.log('<-- save_single_package', results);
     return results;
 });
 
-ipcMain.handle('save_multiple_packages', async (event, args) => {
-    console.log('--> save_multiple_packages', args);
-
+ipcMain.handle('save_multiple_packages', async () => {
     const results = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
         title: 'Select Download Location',
         buttonLabel: 'Download',
         properties: [ 'openDirectory', 'createDirectory' ]
     });
 
-    console.log('<-- save_multiple_packages', results);
     return results;
 });
 
 ipcMain.handle('error_dialog', async (event, args) => {
-    console.log('--> error_dialog', args);
-
     const results = await dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
         type: 'error',
         title: args[0],
@@ -146,7 +139,6 @@ ipcMain.handle('error_dialog', async (event, args) => {
         detail: args[2],
     });
 
-    console.log('<-- error_dialog', results);
     return results;
 });
 
@@ -166,46 +158,59 @@ ipcMain.on('alert', () => {
     shell.beep();
 });
 
-ipcMain.handle('download_package', async (event, args) => {
-    const progressCallback = (n: number) => { console.log(n); };
-    const packageURL = args[0];
-    const filePath = args[1];
-    return new Promise((resolve, reject) => {
-        const f = fs.openSync(filePath, 'w');
-        try {
-            let written = 0;
-            console.log('Downloading file', packageURL, filePath);
-            const request = http.get(packageURL, resp => {
-                const total = parseInt(resp.headers['content-length']);
-                resp.on('data', chunk => {
-                    fs.writeFileSync(f, chunk);
-                    written += chunk.length;
-                    progressCallback((written/total) * 100);
-                });
-                resp.on('end', () => {
-                    console.info('Downloaded file', packageURL);
-                    fs.closeSync(f);
-                    resolve();
-                });
+ipcMain.on('ping', (event, args) => {
+    event.reply('pong', args);
+});
 
-                resp.on('error', e => {
-                    console.error(e);
-                    fs.closeSync(f);
-                    reject(e);
-                });
+ipcMain.on('download_package', (event, args) => {
+    const id = args[0];
+    const packageURL = args[1];
+    const filePath = args[2];
+
+    let lastProgress = 0;
+    const progressCallback = (n: number) => {
+        if (n - lastProgress > 0.5) {
+            event.reply('download_package_progress_' + id, [n]);
+            lastProgress = n;
+        }
+    };
+
+    const f = fs.openSync(filePath, 'w');
+    try {
+        let written = 0;
+        console.log('Downloading file', packageURL, filePath);
+        const request = http.get(packageURL, resp => {
+            const total = parseInt(resp.headers['content-length']);
+
+            resp.on('data', chunk => {
+                fs.writeFileSync(f, chunk);
+                written += chunk.length;
+                progressCallback((written/total) * 100);
             });
-            request.on('error', e => {
+
+            resp.on('end', () => {
+                console.info('Downloaded file', packageURL);
+                fs.closeSync(f);
+                event.reply('download_package_finished_' + id);
+            });
+
+            resp.on('error', e => {
                 console.error(e);
                 fs.closeSync(f);
-                reject(e);
+                event.reply('download_package_failed_' + id, e);
             });
-            request.end();
-        } catch (e) {
+        });
+        request.on('error', e => {
             console.error(e);
             fs.closeSync(f);
-            reject(e);
-        }
-    });
+            event.reply('download_package_failed_' + id, e);
+        });
+        request.end();
+    } catch (e) {
+        console.error(e);
+        fs.closeSync(f);
+        event.reply('download_package_failed_' + id, e);
+    }
 });
 
 ipcMain.handle('hash_file', async (event, args) => {

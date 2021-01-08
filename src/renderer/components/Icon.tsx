@@ -6,6 +6,7 @@ import {
     faDownload,
     faInfoCircle,
     faSearch,
+    faSpinner,
     faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -30,6 +31,7 @@ export namespace Icon {
     export class Download extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faDownload} options={this.props}/> );}}
     export class InfoCircle extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faInfoCircle} options={this.props}/> );}}
     export class Search extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faSearch} options={this.props}/> );}}
+    export class Spinner extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faSpinner} options={this.props}/> );}}
     export class TimesCircle extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faTimesCircle} options={this.props}/> );}}
 
     export interface LabelProps { icon: JSX.Element; spin?: boolean; label: string|number; }
