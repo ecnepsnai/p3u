@@ -2,7 +2,7 @@
   "name": "p3u",
   "version": "1.0.0",
   "description": "An electron app to download update packages for PS3 games",
-  "main": "main.js",
+  "main": "dist/main.js",
   "author": "Ian Spence",
   "license": "ISC",
   "scripts": {

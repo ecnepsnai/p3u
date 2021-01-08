@@ -3,3 +3,4 @@ build
 webpack.*.js
 add_module.js
 .eslintrc.js
+build.*.js

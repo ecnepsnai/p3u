@@ -10,8 +10,8 @@ const packager = require('./build.package.js');
             title: 'PlayStation 3 Updater',
             iconUrl: 'https://raw.githubusercontent.com/ecnepsnai/p3u/develop/icons/P3U.ico',
             setupIcon: 'icons/P3U.ico',
-            exe: 'P3U.exe',
-            setupExe: 'P3U-' + package.version + '.exe',
+            exe: 'p3u.exe',
+            setupExe: 'p3u-' + package.version + '.exe',
         }, function(err) {
             console.error(err);
         }).catch(function(err) {

@@ -1,9 +1,18 @@
+const CopyPlugin = require('copy-webpack-plugin');
+
 module.exports = {
     mode: 'development',
     devtool: 'source-map',
     entry: {
         main: ['./src/main/main.ts', './src/main/p3u.ts']
     },
+    plugins: [
+        new CopyPlugin({
+            patterns: [
+                { from: 'icons/*' },
+            ]
+        })
+    ],
     module: {
         rules: [
             {

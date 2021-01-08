@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path = require('path');
 import fs = require('fs');
+import os = require('os');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -11,8 +12,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 const createWindow = (): void => {
     console.log('Creating window');
 
-    // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    const options: Electron.BrowserWindowConstructorOptions = {
         height: 600,
         width: 800,
         webPreferences: {
@@ -21,11 +21,21 @@ const createWindow = (): void => {
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
         },
+        title: 'PlayStation 3 Updater',
         show: false
-    });
+    };
+
+    if (os.platform() !== 'win32') {
+        options.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.png');
+    } else {
+        options.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.ico');
+    }
+
+    // Create the browser window.
+    const mainWindow = new BrowserWindow(options);
 
     // and load the index.html of the app.
-    mainWindow.loadFile('index.html').then(() => {
+    mainWindow.loadFile(path.join('dist', 'index.html')).then(() => {
         console.log('index loaded!');
     }, e => {
         console.error('Error loading', e);
