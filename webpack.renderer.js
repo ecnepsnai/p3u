@@ -22,8 +22,6 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                { from: 'node_modules/fontsource-fira-sans/index.css', to: 'fonts/' },
-                { from: 'node_modules/fontsource-fira-sans/files/*latin*.woff2', flatten: true, to: 'fonts/files/' },
                 { from: 'node_modules/react/umd/react.' + sourceType + '.js', to: 'assets/js/' },
                 { from: 'node_modules/react-dom/umd/react-dom.' + sourceType + '.js', to: 'assets/js/' },
             ]
@@ -40,6 +38,12 @@ module.exports = {
                         loader: 'ts-loader'
                     }
                 ]
+            },
+            {
+                test: /\.(woff|woff2)$/,
+                use: {
+                    loader: 'url-loader',
+                },
             },
             {
                 enforce: 'pre',

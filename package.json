@@ -9,11 +9,11 @@
     "start": "DEVELOPMENT=1 electron dist/main.js"
   },
   "dependencies": {
+    "@fontsource/fira-sans": "^4.1.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "electron-squirrel-startup": "^1.0.0",
-    "fontsource-fira-sans": "^3.0.5",
     "i": "^0.3.6",
     "npm": "^6.14.10",
     "react": "^17.0.1",

@@ -1,6 +1,14 @@
 const { copyFileSync } = require('fs');
 const path = require('path');
 
+function copyFile(src, dst) {
+    console.log('Copy file', {
+        source: src,
+        destination: dst
+    });
+    copyFileSync(src, dst);
+}
+
 function packageApp(platform) {
     console.info('Packaging application for ' + platform);
     let packager = require('electron-packager');
@@ -18,10 +26,16 @@ function packageApp(platform) {
         osxSign: false,
         darwinDarkModeSupport: true,
         executableName: 'p3u',
+        afterCopy: [
+            (buildPath, electronVersion, platform, arch, callback) => {
+                copyFile(path.resolve('dist', 'index.html'), path.join(buildPath, 'dist', 'index.html'));
+                callback();
+            }
+        ],
         ignore: [
-            /\..*/,
+            /\.es.*/,
+            /\.git.*/,
             /LICENSE/,
-            /package.json/,
             /css/,
             /html/,
             /icons/,
