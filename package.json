@@ -5,9 +5,6 @@
   "main": "dist/main.js",
   "author": "Ian Spence",
   "license": "ISC",
-  "scripts": {
-    "start": "DEVELOPMENT=1 electron dist/main.js"
-  },
   "dependencies": {
     "@fontsource/fira-sans": "^4.1.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
