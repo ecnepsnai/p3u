@@ -3,8 +3,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let devtool = 'source-map';
+let sourceType = 'development';
 if (process.env.NODE_ENV !== 'production') {
     devtool = undefined;
+    sourceType = 'production.min';
 }
 
 module.exports = {
@@ -16,14 +18,14 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: 'html/index.development.html'
+            template: 'html/index.' + sourceType + '.html'
         }),
         new CopyPlugin({
             patterns: [
                 { from: 'node_modules/fontsource-fira-sans/index.css', to: 'fonts/' },
                 { from: 'node_modules/fontsource-fira-sans/files/*latin*.woff2', flatten: true, to: 'fonts/files/' },
-                { from: 'node_modules/react/umd/react.development.js', to: 'assets/js/' },
-                { from: 'node_modules/react-dom/umd/react-dom.development.js', to: 'assets/js/' },
+                { from: 'node_modules/react/umd/react.' + sourceType + '.js', to: 'assets/js/' },
+                { from: 'node_modules/react-dom/umd/react-dom.' + sourceType + '.js', to: 'assets/js/' },
             ]
         })
     ],
