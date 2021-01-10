@@ -4,7 +4,7 @@ module.exports = {
     mode: 'development',
     devtool: 'source-map',
     entry: {
-        main: ['./src/main/main.ts', './src/main/p3u.ts']
+        main: ['./src/main/main.ts', './src/main/ipc.ts']
     },
     plugins: [
         new CopyPlugin({

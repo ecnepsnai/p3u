@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('P3U', {
     saveSinglePackage: (defaultName) => ipcRenderer.invoke('save_single_package', [defaultName]),
     saveMultiplePackages: () => ipcRenderer.invoke('save_multiple_packages', []),
     errorDialog: (title, body, detail) => ipcRenderer.invoke('error_dialog', [title, body, detail]),
-    alert: () => ipcRenderer.send('alert'),
+    beep: () => ipcRenderer.send('beep'),
     ping: (id) => ipcRenderer.send('ping', [id]),
     listenForPong: (cb) => ipcRenderer.on('pong', cb),
     downloadPackage: (id, url, filePath) => ipcRenderer.send('download_package', [id, url, filePath]),

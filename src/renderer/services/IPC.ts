@@ -17,7 +17,7 @@ interface PreloadBridge {
     saveSinglePackage: (defaultName: string) => Promise<SaveFileDialogResult>
     saveMultiplePackages: () => Promise<SelectFolderDialogResult>
     errorDialog: (title: string, body: string, detail?: string) => Promise<void>
-    alert: () => void
+    beep: () => void
     ping: (id: string) => void
     listenForPong: (cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     downloadPackage: (id: string, url: string, filePath: string) => void
@@ -50,8 +50,8 @@ export class IPC {
         return IPC.preload.errorDialog(title, body, detail);
     }
 
-    public static alert(): void {
-        return IPC.preload.alert();
+    public static beep(): void {
+        return IPC.preload.beep();
     }
 
     public static ping(id: string): void {
