@@ -1,6 +1,14 @@
 const { copyFileSync } = require('fs');
 const path = require('path');
 
+function copyFile(src, dst) {
+    console.log('Copy file', {
+        source: src,
+        destination: dst
+    });
+    copyFileSync(src, dst);
+}
+
 function packageApp(platform) {
     console.info('Packaging application for ' + platform);
     let packager = require('electron-packager');
@@ -21,7 +29,8 @@ function packageApp(platform) {
         asar: true,
         afterCopy: [
             (buildPath, electronVersion, platform, arch, callback) => {
-                copyFileSync(path.join('.', 'dist', 'index.html'), path.join(buildPath, 'dist', 'index.html'));
+                copyFile(path.resolve('dist', 'index.html'), path.join(buildPath, 'dist', 'index.html'));
+                copyFile(path.resolve('dist', 'preload.js'), path.join(buildPath, 'dist', 'preload.js'));
                 callback();
             }
         ],
@@ -32,17 +41,12 @@ function packageApp(platform) {
             /node_modules/,
             /src/,
             /add_module.js/,
-            /build.darwin.js/,
-            /build.flatpak.js/,
-            /build.package.js/,
-            /build.windows.js/,
+            /build.[a-z]+.js/,
             /package-lock.json/,
             /README.md/,
             /start_webpack.js/,
             /tsconfig.json/,
-            /webpack.main.js/,
-            /webpack.preload.js/,
-            /webpack.renderer.js/,
+            /webpack.[a-z]+.js/,
             /.*map/,
         ]
     });

@@ -1,8 +1,13 @@
 const path = require('path');
 
+let devtool = 'source-map';
+if (process.env.NODE_ENV !== 'production') {
+    devtool = undefined;
+}
+
 module.exports = {
     mode: 'development',
-    devtool: 'source-map',
+    devtool: devtool,
     entry: {
         main: ['./src/main/preload.js']
     },

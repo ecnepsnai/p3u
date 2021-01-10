@@ -2,9 +2,14 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+let devtool = 'source-map';
+if (process.env.NODE_ENV !== 'production') {
+    devtool = undefined;
+}
+
 module.exports = {
     mode: 'development',
-    devtool: 'source-map',
+    devtool: devtool,
     entry: './src/renderer/index.tsx',
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.html']

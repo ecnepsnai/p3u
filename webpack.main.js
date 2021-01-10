@@ -1,8 +1,13 @@
 const CopyPlugin = require('copy-webpack-plugin');
 
+let devtool = 'source-map';
+if (process.env.NODE_ENV !== 'production') {
+    devtool = undefined;
+}
+
 module.exports = {
     mode: 'development',
-    devtool: 'source-map',
+    devtool: devtool,
     entry: {
         main: ['./src/main/main.ts', './src/main/ipc.ts']
     },

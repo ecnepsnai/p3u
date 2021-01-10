@@ -16,7 +16,7 @@ const isProduction = (): boolean => {
 const createWindow = (): void => {
     const paths = {
         index: 'index.html',
-        preload: path.join(fs.realpathSync('.'), 'dist', 'preload.js'),
+        preload: path.resolve('dist', 'preload.js'),
         icon: path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.png')
     };
     if (isProduction()) {
