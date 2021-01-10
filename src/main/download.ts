@@ -27,7 +27,7 @@ export class Download {
                 resp.on('end', () => {
                     console.info('Downloaded file', packageURL);
                     fs.closeSync(f);
-                    event.reply('download_package_finished_' + id);
+                    event.reply('download_package_finished_' + id, [filePath]);
                 });
 
                 resp.on('error', e => {

@@ -6,7 +6,7 @@
   "author": "Ian Spence",
   "license": "ISC",
   "scripts": {
-    "start": "electron dist/main.js"
+    "start": "DEVELOPMENT=1 electron dist/main.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",

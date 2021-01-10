@@ -21,7 +21,7 @@ export class API {
         });
     }
 
-    public static DownloadPackage(url: string, filePath: string, progressCallback: (perc: number) => void): Promise<void> {
+    public static DownloadPackage(url: string, filePath: string, progressCallback: (perc: number) => void): Promise<string> {
         const downloadID = Rand.ID();
         return new Promise((resolve, reject) => {
             IPC.listenForDownloadProgress(downloadID, (event, args) => {
@@ -29,8 +29,8 @@ export class API {
                 progressCallback(progress);
             });
 
-            IPC.listenForDownloadFinished(downloadID, () => {
-                resolve();
+            IPC.listenForDownloadFinished(downloadID, (event, args) => {
+                resolve(args[0] as string);
             });
 
             IPC.listenForDownloadFailed(downloadID, (event, args) => {

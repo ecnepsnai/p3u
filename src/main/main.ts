@@ -9,33 +9,43 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     app.quit();
 }
 
+const isProduction = (): boolean => {
+    return process.env['DEVELOPMENT'] === undefined;
+};
+
 const createWindow = (): void => {
-    console.log('Creating window');
+    const paths = {
+        index: 'index.html',
+        preload: path.join(fs.realpathSync('.'), 'dist', 'preload.js'),
+        icon: path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.png')
+    };
+    if (isProduction()) {
+        paths.index = path.join('dist', 'index.html');
+    }
+    if (os.platform() === 'win32') {
+        paths.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.ico');
+    }
+    console.log('Paths:', paths);
 
     const options: Electron.BrowserWindowConstructorOptions = {
         height: 600,
         width: 800,
         webPreferences: {
             sandbox: true,
-            preload: path.join(fs.realpathSync('.'), 'dist', 'preload.js'),
+            preload: paths.preload,
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
         },
         title: 'PlayStation 3 Updater',
+        icon: paths.icon,
         show: false
     };
-
-    if (os.platform() !== 'win32') {
-        options.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.png');
-    } else {
-        options.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.ico');
-    }
 
     // Create the browser window.
     const mainWindow = new BrowserWindow(options);
 
     // and load the index.html of the app.
-    mainWindow.loadFile(path.join('dist', 'index.html')).then(() => {
+    mainWindow.loadFile(paths.index).then(() => {
         console.log('index loaded!');
     }, e => {
         console.error('Error loading', e);

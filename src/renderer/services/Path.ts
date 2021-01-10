@@ -1,7 +1,8 @@
 export class Path {
     public static join(...parts: string[]): string {
         let sep = '/';
-        if (((window as any).osPlatform as string) === 'win32') {
+        const isWindows = navigator.platform.toLowerCase().includes('win32');
+        if (isWindows) {
             sep = '\\';
         }
         return parts.join(sep);
