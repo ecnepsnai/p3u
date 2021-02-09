@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 let watch = false;
 let mode = 'development';
@@ -15,14 +15,23 @@ for (var i = 0; i < process.argv.length; i++) {
 
 var startWebpack = (configFile) => {
     return new Promise(resolve => {
-        let command = 'npx webpack --config ' + configFile;
-        if (mode !== 'development') {
-            command += ' --mode ' + mode;
+        const args = ['webpack', '--config', configFile];
+        const env = process.env;
+
+        if (mode === 'production') {
+            args.push('--mode', 'production');
+            env['DEVELOPMENT'] = '1';
         }
         if (watch) {
-            command += ' --watch'
+            args.push('--watch');
         }
-        exec(command, () => { resolve(); });
+
+        console.log('npx', args);
+
+        const electron = spawn('npx', args, { stdio: 'inherit', env: env });
+        electron.on('close', () => {
+            resolve();
+        });
     });
 }
 
