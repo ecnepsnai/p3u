@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import { Menu } from './menu';
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
@@ -14,6 +15,8 @@ const isProduction = (): boolean => {
 };
 
 const createWindow = (): void => {
+    Menu.configureAppMenu();
+
     const paths = {
         index: 'index.html',
         preload: path.resolve('dist', 'preload.js'),
@@ -39,7 +42,8 @@ const createWindow = (): void => {
         },
         title: 'PlayStation 3 Updater',
         icon: paths.icon,
-        show: false
+        show: false,
+        autoHideMenuBar: true
     };
 
     // Create the browser window.
