@@ -15,7 +15,12 @@ for (var i = 0; i < process.argv.length; i++) {
 
 var startWebpack = (configFile) => {
     return new Promise(resolve => {
+        let file = 'npx';
         const args = ['webpack', '--config', configFile];
+        if (os.platform() === 'win32') {
+            file = "node_modules\\.bin\\webpack.cmd";
+            args.splice(0, 1);
+        }
         const env = process.env;
 
         if (mode === 'production') {
@@ -26,9 +31,9 @@ var startWebpack = (configFile) => {
             args.push('--watch');
         }
 
-        console.log('npx', args);
+        console.log(file, args);
 
-        const electron = spawn('npx', args, { stdio: 'inherit', env: env });
+        const electron = spawn(file, args, { stdio: 'inherit', env: env });
         electron.on('close', () => {
             resolve();
         });
