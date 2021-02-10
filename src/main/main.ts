@@ -23,13 +23,20 @@ const createWindow = (): void => {
         icon: path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.png')
     };
     if (isProduction()) {
-        paths.preload = path.resolve('resources', 'app', 'dist', 'preload.js');
+        if (os.platform() === 'darwin') {
+            paths.preload = path.join(__dirname, 'preload.js');
+        } else {
+            paths.preload = path.resolve('resources', 'app', 'dist', 'preload.js');
+        }
         paths.index = path.join('dist', 'index.html');
     }
     if (os.platform() === 'win32') {
         paths.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.ico');
     }
-    console.log('Paths:', paths);
+    if (!fs.existsSync(paths.preload)) {
+        console.error('Preload path does not exist', paths.preload);
+        throw new Error("Preload path does not exist");
+    }
 
     const options: Electron.BrowserWindowConstructorOptions = {
         height: 600,
