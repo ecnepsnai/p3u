@@ -18,25 +18,18 @@ const createWindow = (): void => {
     Menu.configureAppMenu();
 
     const paths = {
-        index: 'index.html',
-        preload: path.resolve('dist', 'preload.js'),
-        icon: path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.png')
+        index: path.join(__dirname, 'index.html'),
+        preload: path.join(__dirname, 'preload.js'),
+        icon: path.join(__dirname, 'icons', 'P3U.png')
     };
-    if (isProduction()) {
-        if (os.platform() === 'darwin') {
-            paths.preload = path.join(__dirname, 'preload.js');
-        } else {
-            paths.preload = path.resolve('resources', 'app', 'dist', 'preload.js');
-        }
-        paths.index = path.join('dist', 'index.html');
-    }
     if (os.platform() === 'win32') {
-        paths.icon = path.join(fs.realpathSync('.'), 'dist', 'icons', 'P3U.ico');
+        paths.icon = path.join(__dirname, 'icons', 'P3U.ico');
     }
     if (!fs.existsSync(paths.preload)) {
         console.error('Preload path does not exist', paths.preload);
         throw new Error("Preload path does not exist");
     }
+    console.log('Paths:', paths);
 
     const options: Electron.BrowserWindowConstructorOptions = {
         height: 600,
@@ -58,7 +51,7 @@ const createWindow = (): void => {
 
     // and load the index.html of the app.
     mainWindow.loadFile(paths.index).then(() => {
-        console.log('index loaded!');
+        console.log('index loaded');
     }, e => {
         console.error('Error loading', e);
     }).catch(e => {
@@ -71,6 +64,7 @@ const createWindow = (): void => {
     }
 
     mainWindow.on('ready-to-show', () => {
+        console.log('window is ready to show');
         mainWindow.show();
     });
 };
@@ -84,10 +78,8 @@ app.on('ready', createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        console.log('All windows closed');
-        app.quit();
-    }
+    console.log('all windows closed');
+    app.quit();
 });
 
 app.on('activate', () => {

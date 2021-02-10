@@ -45,6 +45,7 @@ function packageApp(platform, arch) {
             /package-lock.json/,
             /README.md/,
             /start_webpack.js/,
+            /run.js/,
             /tsconfig.json/,
             /webpack.[a-z]+.js/,
             /.*map/,

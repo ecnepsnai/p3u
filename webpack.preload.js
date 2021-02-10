@@ -1,7 +1,7 @@
 const path = require('path');
 
 let devtool = 'source-map';
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
     devtool = undefined;
 }
 

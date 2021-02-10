@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let devtool = 'source-map';
 let sourceType = 'development';
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
     devtool = undefined;
     sourceType = 'production.min';
 }

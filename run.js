@@ -8,6 +8,7 @@ function start() {
         const args = [path.join('dist', 'main.js')];
         const env = process.env;
         env['DEVELOPMENT'] = '1';
+        env['NODE_ENV'] = 'development';
         console.log(file, args);
         const electron = spawn(file, args, { stdio: 'inherit', env: env });
         electron.on('close', () => {

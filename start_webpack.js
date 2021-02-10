@@ -26,7 +26,7 @@ var startWebpack = (configFile) => {
 
         if (mode === 'production') {
             args.push('--mode', 'production');
-            env['DEVELOPMENT'] = '1';
+            env['NODE_ENV'] = 'production';
         }
         if (watch) {
             args.push('--watch');

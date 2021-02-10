@@ -1,7 +1,7 @@
 const CopyPlugin = require('copy-webpack-plugin');
 
 let devtool = 'source-map';
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
     devtool = undefined;
 }
 
