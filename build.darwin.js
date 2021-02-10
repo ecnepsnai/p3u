@@ -1,17 +1,26 @@
 const macInstaller = require('electron-installer-dmg');
 const packager = require('./build.package.js');
 
-(async function main() {
-    await packager.app('darwin').then(() => {
-        macInstaller({
-            appPath: 'package/PlayStation 3 Updater-darwin-x64/PlayStation 3 Updater.app',
-            name: 'PlayStation 3 Updater',
+async function build(arch, name) {
+    return packager.app('darwin', arch).then(() => {
+        return macInstaller({
+            appPath: 'package/PlayStation 3 Updater-darwin-' + arch + '/PlayStation 3 Updater.app',
+            name: 'P3U_' + name,
             out: 'package/artifacts',
             icon: 'icons/P3U.icns'
         });
     }, function(err) {
-        console.error(err);
+        throw err;
     }).catch(function(err) {
-        console.error(err);
+        throw err;
     });
+}
+
+(async function main() {
+    try {
+        await build('x64', 'Intel');
+        await build('arm64', 'M1');
+    } catch (err) {
+        console.error(err);
+    }
 })();

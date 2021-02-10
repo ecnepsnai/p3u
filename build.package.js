@@ -9,13 +9,12 @@ function copyFile(src, dst) {
     copyFileSync(src, dst);
 }
 
-function packageApp(platform) {
-    console.info('Packaging application for ' + platform);
+function packageApp(platform, arch) {
     let packager = require('electron-packager');
     return packager({
         dir: '.',
-        appCopyright: 'Copyright © Ian Spence 2020',
-        arch: 'x64',
+        appCopyright: 'Copyright © Ian Spence 2021',
+        arch: arch,
         icon: 'icons/P3U',
         name: 'PlayStation 3 Updater',
         out: 'package',

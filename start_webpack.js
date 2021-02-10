@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const os = require('os');
 
 let watch = false;
 let mode = 'development';

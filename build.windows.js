@@ -1,9 +1,8 @@
 const windowsInstaller = require('electron-winstaller');
-const package = require('./package.json');
 const packager = require('./build.package.js');
 
 (async function main() {
-    await packager.app('win32').then(() => {
+    await packager.app('win32', 'x64').then(() => {
         return windowsInstaller.createWindowsInstaller({
             appDirectory: 'package/PlayStation 3 Updater-win32-x64',
             outputDirectory: 'package/artifacts',
@@ -11,7 +10,7 @@ const packager = require('./build.package.js');
             iconUrl: 'https://raw.githubusercontent.com/ecnepsnai/p3u/develop/icons/P3U.ico',
             setupIcon: 'icons/P3U.ico',
             exe: 'p3u.exe',
-            setupExe: 'p3u-' + package.version + '.exe',
+            setupExe: 'P3U.exe',
         }, function(err) {
             console.error(err);
         }).catch(function(err) {

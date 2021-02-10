@@ -58,8 +58,10 @@ const createWindow = (): void => {
         console.error('Error loading', e);
     });
 
-    // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    if (!isProduction()) {
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools();
+    }
 
     mainWindow.on('ready-to-show', () => {
         mainWindow.show();
