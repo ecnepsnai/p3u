@@ -1,6 +1,6 @@
 {
   "name": "p3u",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An electron app to download update packages for PS3 games",
   "main": "dist/main.js",
   "author": "Ian Spence <ian@ecn.io>",
