@@ -1,4 +1,5 @@
 import { Title } from '../types/Title';
+import { RuntimeVersions } from '../types/Versions';
 
 interface SaveFileDialogResult {
     canceled: boolean;
@@ -11,6 +12,7 @@ interface SelectFolderDialogResult {
 }
 
 interface PreloadBridge {
+    getTitle: () => Promise<string>
     lookupTitle: (titleID: string) => Promise<Title>
     saveSinglePackage: (defaultName: string) => Promise<SaveFileDialogResult>
     saveMultiplePackages: () => Promise<SelectFolderDialogResult>
@@ -25,6 +27,8 @@ interface PreloadBridge {
     hashFile: (filePath: string) => Promise<string>
     checkForUpdates: () => Promise<string>
     openInBrowser: (url: string) => void;
+    fatalError: (error: unknown, errorInfo: unknown) => void;
+    runtimeVersions: () => Promise<RuntimeVersions>
 }
 
 interface preloadWindow {
@@ -33,6 +37,10 @@ interface preloadWindow {
 
 export class IPC {
     private static preload: PreloadBridge = (window as unknown as preloadWindow).P3U as PreloadBridge;
+
+    public static getTitle(): Promise<string> {
+        return IPC.preload.getTitle();
+    }
 
     public static lookupTitle(titleID: string): Promise<Title> {
         return IPC.preload.lookupTitle(titleID);
@@ -88,5 +96,13 @@ export class IPC {
 
     public static openInBrowser(url: string): void {
         return IPC.preload.openInBrowser(url);
+    }
+
+    public static fatalError(error: unknown, errorInfo: unknown): void {
+        return IPC.preload.fatalError(error, errorInfo);
+    }
+
+    public static runtimeVersions(): Promise<RuntimeVersions> {
+        return IPC.preload.runtimeVersions();
     }
 }

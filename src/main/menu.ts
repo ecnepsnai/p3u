@@ -1,4 +1,5 @@
-import { app, Menu as EMenu } from 'electron';
+import { app, BrowserWindow, Menu as EMenu } from 'electron';
+import { Dialog } from './dialog';
 
 export class Menu {
     public static configureAppMenu(): void {
@@ -47,7 +48,12 @@ export class Menu {
             template.splice(0, 0, {
                 label: app.name,
                 submenu: [
-                    { role: 'about' },
+                    {
+                        label: 'About PlayStation 3 Updater',
+                        click: () => {
+                            this.aboutMenuClicked(BrowserWindow.getFocusedWindow());
+                        },
+                    },
                     { type: 'separator' },
                     { role: 'services' },
                     { type: 'separator' },
@@ -57,9 +63,25 @@ export class Menu {
                     { role: 'quit' }
                 ]
             });
+        } else {
+            template.push({
+                label: 'Help',
+                submenu: [
+                    {
+                        label: 'About PlayStation 3 Updater',
+                        click: () => {
+                            this.aboutMenuClicked(BrowserWindow.getFocusedWindow());
+                        },
+                    }
+                ]
+            });
         }
 
         const menu = EMenu.buildFromTemplate(template);
         EMenu.setApplicationMenu(menu);
+    }
+
+    private static aboutMenuClicked = (target: Electron.BrowserWindow) => {
+        new Dialog(target).showAboutModal();
     }
 }

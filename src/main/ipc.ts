@@ -4,11 +4,17 @@ import { Download } from './download';
 import { Lookup } from './lookup';
 import { Hash } from './hash';
 import { Updater } from './updater';
+import * as manifest from '../../package.json';
 
 const browserWindowFromEvent = (sender: webContents): BrowserWindow => {
     const windows = BrowserWindow.getAllWindows().filter(window => window.webContents.id === sender.id);
     return windows[0];
 };
+
+ipcMain.handle('get_title', event => {
+    const window = browserWindowFromEvent(event.sender);
+    return Promise.resolve(window.title);
+});
 
 ipcMain.handle('lookup_title', async (event, args) => {
     event.sender.id;
@@ -55,4 +61,27 @@ ipcMain.handle('check_for_updates', async () => {
 
 ipcMain.on('open_in_browser', (event, args) => {
     shell.openExternal(args[0]);
+});
+
+ipcMain.on('fatal_error', (event, args) => {
+    const error = args[0] as Error;
+    const errorInfo = args[1] as React.ErrorInfo;
+    console.error('Fatal error from renderer: ' + error + errorInfo.componentStack);
+    const window = browserWindowFromEvent(event.sender);
+
+    new Dialog(window).showFatalErrorDialog().then(() => {
+        window.reload();
+    });
+});
+
+ipcMain.handle('runtime_versions', async () => {
+    const app = manifest.version;
+    const electron = manifest.dependencies.electron;
+    const nodejs = process.version.substr(1);
+
+    return {
+        app: app,
+        electron: electron,
+        nodejs: nodejs,
+    };
 });
