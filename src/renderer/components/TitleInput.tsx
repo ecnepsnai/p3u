@@ -26,7 +26,9 @@ export class TitleInput extends React.Component<TitleInputProps, TitleInputState
     }
 
     private icon = () => {
-        if (!this.props.loading) { return null; }
+        if (!this.props.loading) {
+            return null; 
+        }
         return (
             <div className="search-box-icon">
                 <Icon.Spinner pulse />

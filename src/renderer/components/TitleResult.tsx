@@ -40,7 +40,6 @@ export class TitleResult extends React.Component<TitleResultProps, TitleResultSt
 
     private onDownloadFinished = (pkg: Package) => {
         this.packageDownloaded[pkg.version] = true;
-        console.log(this.packageDownloaded);
         this.checkAllFinished();
     }
 

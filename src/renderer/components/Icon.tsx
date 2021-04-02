@@ -21,21 +21,45 @@ export namespace Icon {
         options: IconProps;
     }
 
-    class EIcon extends React.Component<EIconProps, {}> {
+    class EIcon extends React.Component<EIconProps, unknown> {
         render(): JSX.Element {
             return ( <FontAwesomeIcon icon={this.props.icon} pulse={this.props.options.pulse} spin={this.props.options.spin}/> );
         }
     }
 
-    export class CheckCircle extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faCheckCircle} options={this.props}/> );}}
-    export class Download extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faDownload} options={this.props}/> );}}
-    export class InfoCircle extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faInfoCircle} options={this.props}/> );}}
-    export class Search extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faSearch} options={this.props}/> );}}
-    export class Spinner extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faSpinner} options={this.props}/> );}}
-    export class TimesCircle extends React.Component<IconProps, {}> {render(): JSX.Element { return ( <EIcon icon={faTimesCircle} options={this.props}/> );}}
+    export class CheckCircle extends React.Component<IconProps, unknown> {
+        render(): JSX.Element {
+            return ( <EIcon icon={faCheckCircle} options={this.props}/> );
+        }
+    }
+    export class Download extends React.Component<IconProps, unknown> {
+        render(): JSX.Element {
+            return ( <EIcon icon={faDownload} options={this.props}/> );
+        }
+    }
+    export class InfoCircle extends React.Component<IconProps, unknown> {
+        render(): JSX.Element {
+            return ( <EIcon icon={faInfoCircle} options={this.props}/> );
+        }
+    }
+    export class Search extends React.Component<IconProps, unknown> {
+        render(): JSX.Element {
+            return ( <EIcon icon={faSearch} options={this.props}/> );
+        }
+    }
+    export class Spinner extends React.Component<IconProps, unknown> {
+        render(): JSX.Element {
+            return ( <EIcon icon={faSpinner} options={this.props}/> );
+        }
+    }
+    export class TimesCircle extends React.Component<IconProps, unknown> {
+        render(): JSX.Element {
+            return ( <EIcon icon={faTimesCircle} options={this.props}/> );
+        }
+    }
 
     export interface LabelProps { icon: JSX.Element; spin?: boolean; label: string|number; }
-    export class Label extends React.Component<LabelProps, {}> {
+    export class Label extends React.Component<LabelProps, unknown> {
         render(): JSX.Element {
             return (
                 <span>

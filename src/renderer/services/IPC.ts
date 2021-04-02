@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { Title } from "../types/Title";
+import { Title } from '../types/Title';
 
 interface SaveFileDialogResult {
     canceled: boolean;
@@ -19,12 +17,14 @@ interface PreloadBridge {
     errorDialog: (title: string, body: string, detail?: string) => Promise<void>
     beep: () => void
     ping: (id: string) => void
-    listenForPong: (cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+    listenForPong: (cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
     downloadPackage: (id: string, url: string, filePath: string) => void
-    listenForDownloadProgress: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
-    listenForDownloadFinished: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
-    listenForDownloadFailed: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+    listenForDownloadProgress: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
+    listenForDownloadFinished: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
+    listenForDownloadFailed: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
     hashFile: (filePath: string) => Promise<string>
+    checkForUpdates: () => Promise<string>
+    openInBrowser: (url: string) => void;
 }
 
 interface preloadWindow {
@@ -58,7 +58,7 @@ export class IPC {
         return IPC.preload.ping(id);
     }
 
-    public static listenForPong(cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void {
+    public static listenForPong(cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void): void {
         return IPC.preload.listenForPong(cb);
     }
 
@@ -66,19 +66,27 @@ export class IPC {
         return IPC.preload.downloadPackage(id, url, filePath);
     }
 
-    public static listenForDownloadProgress(id: string, cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void {
+    public static listenForDownloadProgress(id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void): void {
         return IPC.preload.listenForDownloadProgress(id, cb);
     }
 
-    public static listenForDownloadFinished(id: string, cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void {
+    public static listenForDownloadFinished(id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void): void {
         return IPC.preload.listenForDownloadFinished(id, cb);
     }
 
-    public static listenForDownloadFailed(id: string, cb: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void {
+    public static listenForDownloadFailed(id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void): void {
         return IPC.preload.listenForDownloadFailed(id, cb);
     }
 
     public static hashFile(filePath: string): Promise<string> {
         return IPC.preload.hashFile(filePath);
+    }
+
+    public static checkForUpdates(): Promise<string> {
+        return IPC.preload.checkForUpdates();
+    }
+
+    public static openInBrowser(url: string): void {
+        return IPC.preload.openInBrowser(url);
     }
 }

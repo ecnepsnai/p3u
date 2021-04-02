@@ -53,7 +53,9 @@ export class Lookup {
             const request = https.request(options, resp => {
                 resp.setEncoding('utf8');
                 let rawData = '';
-                resp.on('data', chunk => { rawData += chunk; });
+                resp.on('data', chunk => {
+                    rawData += chunk; 
+                });
                 resp.on('end', () => {
                     resolve(rawData);
                 });

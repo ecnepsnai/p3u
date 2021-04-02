@@ -59,7 +59,9 @@ export class Dialog {
         }
 
         if (process.platform !== 'darwin') {
-            this.parent.once('focus', () => { this.parent.flashFrame(false); });
+            this.parent.once('focus', () => {
+                this.parent.flashFrame(false); 
+            });
             this.parent.flashFrame(true);
         } else {
             app.dock.bounce();

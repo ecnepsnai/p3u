@@ -3,18 +3,20 @@ import { Title } from './types/Title';
 import { TitleInput } from './components/TitleInput';
 import { TitleResult } from './components/TitleResult';
 import { API } from './services/API';
-import '../../css/App.scss';
+import { IPC } from './services/IPC';
 import { Icon } from './components/Icon';
+import { Link } from './components/Link';
+import '../../css/App.scss';
 
-export interface AppProps {}
 interface AppState {
     loading: boolean;
     titleLoading?: boolean;
     titleError?: string;
     title?: Title;
+    newVersionURL?: string;
 }
-export class App extends React.Component<AppProps, AppState> {
-    constructor(props: AppProps) {
+export class App extends React.Component<unknown, AppState> {
+    constructor(props: unknown) {
         super(props);
         this.state = {
             loading: true,
@@ -26,6 +28,10 @@ export class App extends React.Component<AppProps, AppState> {
             this.setState({
                 loading: false,
             });
+        });
+
+        IPC.checkForUpdates().then(newURL => {
+            this.setState({ newVersionURL: newURL });
         });
     }
 
@@ -40,7 +46,9 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     private titleError = () => {
-        if (!this.state.titleError) { return null; }
+        if (!this.state.titleError) {
+            return null;
+        }
 
         return (
             <div className="title-error">
@@ -50,11 +58,24 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     private results = () => {
-        if (!this.state.title) { return null; }
+        if (!this.state.title) {
+            return null;
+        }
 
         return (
             <TitleResult title={this.state.title} />
         );
+    }
+
+    private newVersionBanner = () => {
+        if (!this.state.newVersionURL) {
+            return null;
+        }
+
+        return (<div className="new-version">
+            <strong>A newer version is available</strong>
+            <Link url={this.state.newVersionURL}>Click here to view</Link>
+        </div>);
     }
 
     render(): JSX.Element {
@@ -64,6 +85,7 @@ export class App extends React.Component<AppProps, AppState> {
 
         return (
             <div>
+                { this.newVersionBanner() }
                 <TitleInput onSubmit={this.lookupTitle} loading={this.state.titleLoading} />
                 { this.titleError() }
                 { this.results() }

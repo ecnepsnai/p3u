@@ -15,20 +15,20 @@ export class Hash {
             stream.on('readable', () => {
                 let chunk;
                 while (length < max) {
-                        const readL = Math.min(65536, max-length);
-                        chunk = stream.read(readL);
-                        if (!chunk) {
-                                break;
-                        }
-                        length += chunk.length;
-                        hash.write(chunk);
+                    const readL = Math.min(65536, max-length);
+                    chunk = stream.read(readL);
+                    if (!chunk) {
+                        break;
+                    }
+                    length += chunk.length;
+                    hash.write(chunk);
                 }
 
                 if (length == max) {
-                        hash.end();
-                        stream.close();
-                        resolve(hash.read());
-                        return;
+                    hash.end();
+                    stream.close();
+                    resolve(hash.read());
+                    return;
                 }
             });
             stream.on('error', e => {

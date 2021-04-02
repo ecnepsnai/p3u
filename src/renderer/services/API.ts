@@ -11,7 +11,7 @@ export class API {
         const id = Rand.ID();
 
         return new Promise(resolve => {
-            IPC.listenForPong((event, args) => {
+            IPC.listenForPong((event, args: string[]) => {
                 if (args[0] === id) {
                     resolve();
                 }
@@ -24,17 +24,17 @@ export class API {
     public static DownloadPackage(url: string, filePath: string, progressCallback: (perc: number) => void): Promise<string> {
         const downloadID = Rand.ID();
         return new Promise((resolve, reject) => {
-            IPC.listenForDownloadProgress(downloadID, (event, args) => {
-                const progress = args[0] as number;
+            IPC.listenForDownloadProgress(downloadID, (event, args: number[]) => {
+                const progress = args[0];
                 progressCallback(progress);
             });
 
-            IPC.listenForDownloadFinished(downloadID, (event, args) => {
-                resolve(args[0] as string);
+            IPC.listenForDownloadFinished(downloadID, (event, args: string[]) => {
+                resolve(args[0]);
             });
 
-            IPC.listenForDownloadFailed(downloadID, (event, args) => {
-                const error = args[0] as string;
+            IPC.listenForDownloadFailed(downloadID, (event, args: string[]) => {
+                const error = args[0];
                 reject(error);
             });
 

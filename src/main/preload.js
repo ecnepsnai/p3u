@@ -13,4 +13,6 @@ contextBridge.exposeInMainWorld('P3U', {
     listenForDownloadFinished: (id, cb) => ipcRenderer.on('download_package_finished_' + id, cb),
     listenForDownloadFailed: (id, cb) => ipcRenderer.on('download_package_failed_' + id, cb),
     hashFile: (filePath) => ipcRenderer.invoke('hash_file', [filePath]),
+    checkForUpdates: () => ipcRenderer.invoke('check_for_updates'),
+    openInBrowser: (url) => ipcRenderer.send('open_in_browser', [url]),
 });

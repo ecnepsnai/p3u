@@ -1,8 +1,9 @@
-import { BrowserWindow, ipcMain, webContents } from 'electron';
+import { BrowserWindow, ipcMain, shell, webContents } from 'electron';
 import { Dialog } from './dialog';
 import { Download } from './download';
 import { Lookup } from './lookup';
 import { Hash } from './hash';
+import { Updater } from './updater';
 
 const browserWindowFromEvent = (sender: webContents): BrowserWindow => {
     const windows = BrowserWindow.getAllWindows().filter(window => window.webContents.id === sender.id);
@@ -40,4 +41,18 @@ ipcMain.on('download_package', (event, args) => {
 
 ipcMain.handle('hash_file', async (event, args) => {
     return Hash.file(args[0]);
+});
+
+ipcMain.handle('check_for_updates', async () => {
+    const newerVersion = await Updater.GetNewerRelease();
+
+    if (newerVersion == undefined) {
+        return undefined;
+    }
+
+    return newerVersion.ReleaseURL;
+});
+
+ipcMain.on('open_in_browser', (event, args) => {
+    shell.openExternal(args[0]);
 });

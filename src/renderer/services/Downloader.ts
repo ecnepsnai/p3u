@@ -1,6 +1,6 @@
-import { Package } from "../types/Title";
-import { API } from "./API";
-import { Security } from "./Security";
+import { Package } from '../types/Title';
+import { API } from './API';
+import { Security } from './Security';
 
 export class Downloader {
     public static DownloadPackage(pkg: Package, filePath: string, progress: (perc: number) => void): Promise<boolean> {

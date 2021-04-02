@@ -1,4 +1,4 @@
-import { IPC } from "./IPC";
+import { IPC } from './IPC';
 
 export class Security {
     /**

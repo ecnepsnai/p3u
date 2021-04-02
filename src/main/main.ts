@@ -1,8 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { Menu } from './menu';
-import path = require('path');
-import fs = require('fs');
-import os = require('os');
+import { Paths } from './paths';
+import { App } from './app';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -10,61 +9,47 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     app.quit();
 }
 
-const isProduction = (): boolean => {
-    return process.env['DEVELOPMENT'] === undefined;
-};
-
 const createWindow = (): void => {
     Menu.configureAppMenu();
 
-    const paths = {
-        index: path.join(__dirname, 'index.html'),
-        preload: path.join(__dirname, 'preload.js'),
-        icon: path.join(__dirname, 'icons', 'P3U.png')
-    };
-    if (os.platform() === 'win32') {
-        paths.icon = path.join(__dirname, 'icons', 'P3U.ico');
-    }
-    if (!fs.existsSync(paths.preload)) {
-        console.error('Preload path does not exist', paths.preload);
-        throw new Error("Preload path does not exist");
-    }
-    console.log('Paths:', paths);
+    const paths = Paths.default();
+    console.log(paths);
 
     const options: Electron.BrowserWindowConstructorOptions = {
         height: 600,
         width: 800,
+        minHeight: 300,
+        minWidth: 600,
         webPreferences: {
             sandbox: true,
-            preload: paths.preload,
+            preload: paths.preloadJS,
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
         },
+        autoHideMenuBar: true,
         title: 'PlayStation 3 Updater',
         icon: paths.icon,
-        show: false,
-        autoHideMenuBar: true
+        show: false
     };
 
     // Create the browser window.
     const mainWindow = new BrowserWindow(options);
 
     // and load the index.html of the app.
-    mainWindow.loadFile(paths.index).then(() => {
-        console.log('index loaded');
+    mainWindow.loadFile(paths.indexHTML).then(() => {
+        //
     }, e => {
         console.error('Error loading', e);
     }).catch(e => {
         console.error('Error loading', e);
     });
 
-    if (!isProduction()) {
+    if (!App.isProduction()) {
         // Open the DevTools.
         mainWindow.webContents.openDevTools();
     }
 
     mainWindow.on('ready-to-show', () => {
-        console.log('window is ready to show');
         mainWindow.show();
     });
 };
@@ -72,13 +57,14 @@ const createWindow = (): void => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+    createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-    console.log('all windows closed');
     app.quit();
 });
 
