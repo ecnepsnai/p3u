@@ -85,10 +85,10 @@ export class App extends React.Component<unknown, AppState> {
 
         return (
             <div>
-                { this.newVersionBanner() }
+                {this.newVersionBanner()}
                 <TitleInput onSubmit={this.lookupTitle} loading={this.state.titleLoading} />
-                { this.titleError() }
-                { this.results() }
+                {this.titleError()}
+                {this.results()}
             </div>
         );
     }

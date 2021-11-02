@@ -21,7 +21,7 @@ export class Download {
                 resp.on('data', chunk => {
                     fs.writeFileSync(f, chunk);
                     written += chunk.length;
-                    progressCallback((written/total) * 100);
+                    progressCallback((written / total) * 100);
                 });
 
                 resp.on('end', () => {

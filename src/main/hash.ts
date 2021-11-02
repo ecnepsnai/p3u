@@ -15,7 +15,7 @@ export class Hash {
             stream.on('readable', () => {
                 let chunk;
                 while (length < max) {
-                    const readL = Math.min(65536, max-length);
+                    const readL = Math.min(65536, max - length);
                     chunk = stream.read(readL);
                     if (!chunk) {
                         break;

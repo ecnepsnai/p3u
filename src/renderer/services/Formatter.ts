@@ -1,6 +1,6 @@
 export class Formatter {
     private static round(value: number, decimals: number): number {
-        return Number(Math.round(parseFloat(value+'e'+decimals))+'e-'+decimals);
+        return Number(Math.round(parseFloat(value + 'e' + decimals)) + 'e-' + decimals);
     }
 
     private static bytes(input: number, k: number, u: string): string {

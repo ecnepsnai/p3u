@@ -20,7 +20,7 @@ export class Dialog {
             defaultPath: defaultName,
             filters: [{
                 name: 'PlayStation 3 Package',
-                extensions: [ 'pkg' ]
+                extensions: ['pkg']
             }]
         });
     }
@@ -33,7 +33,7 @@ export class Dialog {
         return dialog.showOpenDialog(this.parent, {
             title: 'Select Download Location',
             buttonLabel: 'Download',
-            properties: [ 'openDirectory', 'createDirectory' ]
+            properties: ['openDirectory', 'createDirectory']
         });
     }
 
@@ -114,7 +114,6 @@ export class Dialog {
                 webPreferences: {
                     sandbox: true,
                     preload: paths.preloadJS,
-                    worldSafeExecuteJavaScript: true,
                     contextIsolation: true,
                 },
                 autoHideMenuBar: true,

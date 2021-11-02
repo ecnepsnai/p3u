@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, shell, webContents } from 'electron';
+import { BrowserWindow, ipcMain, shell, WebContents } from 'electron';
 import { Dialog } from './dialog';
 import { Download } from './download';
 import { Lookup } from './lookup';
@@ -6,7 +6,7 @@ import { Hash } from './hash';
 import { Updater } from './updater';
 import * as manifest from '../../package.json';
 
-const browserWindowFromEvent = (sender: webContents): BrowserWindow => {
+const browserWindowFromEvent = (sender: WebContents): BrowserWindow => {
     const windows = BrowserWindow.getAllWindows().filter(window => window.webContents.id === sender.id);
     return windows[0];
 };

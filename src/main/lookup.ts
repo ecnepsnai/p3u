@@ -45,7 +45,7 @@ export class Lookup {
             port: 443,
             path: '/tpl/np/' + titleID + '/' + titleID + '-ver.xml',
             method: 'GET',
-            ca: [ ca ],
+            ca: [ca],
         };
         options.agent = new https.Agent(options as https.AgentOptions);
         return new Promise((resolve, reject) => {
@@ -54,7 +54,7 @@ export class Lookup {
                 resp.setEncoding('utf8');
                 let rawData = '';
                 resp.on('data', chunk => {
-                    rawData += chunk; 
+                    rawData += chunk;
                 });
                 resp.on('end', () => {
                     resolve(rawData);
@@ -77,7 +77,7 @@ export class Lookup {
             packages: [],
         };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        parser.parseString(xmlData, function(err: Error, result: any) {
+        parser.parseString(xmlData, function (err: Error, result: any) {
             if (!result || !result.titlepatch) {
                 throw new Error('No updates for package');
             }
