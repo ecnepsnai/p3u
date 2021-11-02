@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu as EMenu } from 'electron';
+import { BrowserWindow, Menu as EMenu } from 'electron';
 import { Dialog } from './dialog';
 
 export class Menu {
@@ -42,29 +42,7 @@ export class Menu {
                     { role: 'close' }
                 ]
             },
-        ];
-
-        if (process.platform === 'darwin') {
-            template.splice(0, 0, {
-                label: app.name,
-                submenu: [
-                    {
-                        label: 'About PlayStation 3 Updater',
-                        click: () => {
-                            this.aboutMenuClicked(BrowserWindow.getFocusedWindow());
-                        },
-                    },
-                    { type: 'separator' },
-                    { role: 'services' },
-                    { type: 'separator' },
-                    { role: 'hide' },
-                    { role: 'unhide' },
-                    { type: 'separator' },
-                    { role: 'quit' }
-                ]
-            });
-        } else {
-            template.push({
+            {
                 label: 'Help',
                 submenu: [
                     {
@@ -74,8 +52,8 @@ export class Menu {
                         },
                     }
                 ]
-            });
-        }
+            }
+        ];
 
         const menu = EMenu.buildFromTemplate(template);
         EMenu.setApplicationMenu(menu);

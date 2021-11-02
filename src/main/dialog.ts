@@ -1,4 +1,4 @@
-import { shell, BrowserWindow, dialog, app } from 'electron';
+import { shell, BrowserWindow, dialog } from 'electron';
 import { App } from './app';
 import { Paths } from './paths';
 
@@ -60,14 +60,10 @@ export class Dialog {
             return;
         }
 
-        if (process.platform !== 'darwin') {
-            this.parent.once('focus', () => {
-                this.parent.flashFrame(false);
-            });
-            this.parent.flashFrame(true);
-        } else {
-            app.dock.bounce();
-        }
+        this.parent.once('focus', () => {
+            this.parent.flashFrame(false);
+        });
+        this.parent.flashFrame(true);
         shell.beep();
     }
 

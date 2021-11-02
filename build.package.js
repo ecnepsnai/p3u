@@ -40,8 +40,6 @@ function packageApp(platform, arch) {
         platform: platform,
         appBundleId: 'io.ecn.p3u',
         appCategoryType: 'public.app-category.entertainment',
-        osxSign: false,
-        darwinDarkModeSupport: true,
         executableName: 'p3u',
         afterCopy: [
             (buildPath, electronVersion, platform, arch, callback) => {

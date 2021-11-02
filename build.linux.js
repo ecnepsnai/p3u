@@ -11,7 +11,6 @@ async function build(arch) {
     try {
         await packager.exec('mkdir', ['-p', 'package/artifacts']);
         await build('x64');
-        await build('arm64');
     } catch (err) {
         console.error(err);
     }
