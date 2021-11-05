@@ -11,9 +11,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export namespace Icon {
-    export interface IconProps {
+    interface IconProps {
         pulse?: boolean;
         spin?: boolean;
+        title?: string;
     }
 
     interface EIconProps {
@@ -21,52 +22,24 @@ export namespace Icon {
         options: IconProps;
     }
 
-    class EIcon extends React.Component<EIconProps, unknown> {
-        render(): JSX.Element {
-            return ( <FontAwesomeIcon icon={this.props.icon} pulse={this.props.options.pulse} spin={this.props.options.spin}/> );
-        }
-    }
+    export const EIcon: React.FC<EIconProps> = (props: EIconProps) => {
+        return (<FontAwesomeIcon icon={props.icon} pulse={props.options.pulse} spin={props.options.spin} title={props.options.title} />);
+    };
 
-    export class CheckCircle extends React.Component<IconProps, unknown> {
-        render(): JSX.Element {
-            return ( <EIcon icon={faCheckCircle} options={this.props}/> );
-        }
-    }
-    export class Download extends React.Component<IconProps, unknown> {
-        render(): JSX.Element {
-            return ( <EIcon icon={faDownload} options={this.props}/> );
-        }
-    }
-    export class InfoCircle extends React.Component<IconProps, unknown> {
-        render(): JSX.Element {
-            return ( <EIcon icon={faInfoCircle} options={this.props}/> );
-        }
-    }
-    export class Search extends React.Component<IconProps, unknown> {
-        render(): JSX.Element {
-            return ( <EIcon icon={faSearch} options={this.props}/> );
-        }
-    }
-    export class Spinner extends React.Component<IconProps, unknown> {
-        render(): JSX.Element {
-            return ( <EIcon icon={faSpinner} options={this.props}/> );
-        }
-    }
-    export class TimesCircle extends React.Component<IconProps, unknown> {
-        render(): JSX.Element {
-            return ( <EIcon icon={faTimesCircle} options={this.props}/> );
-        }
-    }
+    interface LabelProps { icon: JSX.Element; spin?: boolean; label: string | number; }
+    export const Label: React.FC<LabelProps> = (props: LabelProps) => {
+        return (
+            <span>
+                {props.icon}
+                <span className="ml-1">{props.label}</span>
+            </span>
+        );
+    };
 
-    export interface LabelProps { icon: JSX.Element; spin?: boolean; label: string|number; }
-    export class Label extends React.Component<LabelProps, unknown> {
-        render(): JSX.Element {
-            return (
-                <span>
-                    { this.props.icon }
-                    <span className="ml-1">{ this.props.label }</span>
-                </span>
-            );
-        }
-    }
+    export const CheckCircle: React.FC<IconProps> = (props: IconProps) => EIcon({ icon: faCheckCircle, options: props });
+    export const Download: React.FC<IconProps> = (props: IconProps) => EIcon({ icon: faDownload, options: props });
+    export const InfoCircle: React.FC<IconProps> = (props: IconProps) => EIcon({ icon: faInfoCircle, options: props });
+    export const Search: React.FC<IconProps> = (props: IconProps) => EIcon({ icon: faSearch, options: props });
+    export const Spinner: React.FC<IconProps> = (props: IconProps) => EIcon({ icon: faSpinner, options: props });
+    export const TimesCircle: React.FC<IconProps> = (props: IconProps) => EIcon({ icon: faTimesCircle, options: props });
 }

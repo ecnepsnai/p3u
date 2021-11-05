@@ -12,6 +12,6 @@ export const Link: React.FC<LinkProps> = (props: LinkProps) => {
     };
 
     return (
-        <a href="#" onClick={onClick}>{ props.children }</a>
+        <a href="#" onClick={onClick}>{props.children}</a>
     );
 };

@@ -6,9 +6,9 @@ import { Icon } from './Icon';
 import { Notify } from '../services/Notify';
 import { Button } from './Button';
 import { Progress } from './Progress';
-import '../../../css/TitlePackage.scss';
 import { Path } from '../services/Path';
 import { IPC } from '../services/IPC';
+import '../../../css/TitlePackage.scss';
 
 export interface TitlePackageProps {
     package: Package;
@@ -16,40 +16,29 @@ export interface TitlePackageProps {
     isDownloaded?: boolean;
     onDownloadFinished: (pkg: Package) => (void);
 }
-interface TitlePackageState {
-    isDownloading: boolean;
-    downloadDir?: string;
-    finished?: boolean;
-    percent: number;
-}
-export class TitlePackage extends React.Component<TitlePackageProps, TitlePackageState> {
-    constructor(props: TitlePackageProps) {
-        super(props);
-        this.state = {
-            isDownloading: props.downloadToDir != undefined,
-            downloadDir: props.downloadToDir,
-            finished: props.isDownloaded,
-            percent: 0,
-        };
-    }
+export const TitlePackage: React.FC<TitlePackageProps> = (props: TitlePackageProps) => {
+    const [IsDownloading, SetIsDownloading] = React.useState(props.downloadToDir != undefined);
+    const [DownloadDir, SetDownloadDir] = React.useState(props.downloadToDir);
+    const [Finished, SetFinished] = React.useState(props.isDownloaded);
+    const [DownloadPercent, SetDownloadPercent] = React.useState(0);
 
-    componentDidMount(): void {
-        if (this.state.isDownloading && this.state.downloadDir) {
-            this.startDownload(Path.join(this.state.downloadDir, this.packageName()));
+    React.useEffect(() => {
+        if (IsDownloading && DownloadDir) {
+            startDownload(Path.join(DownloadDir, packageName()));
         }
-    }
+    }, []);
 
-    private buttonClick = () => {
-        if (this.state.isDownloading || this.state.finished) {
+    const buttonClick = () => {
+        if (IsDownloading || Finished) {
             return;
         }
 
-        IPC.saveSinglePackage(this.packageName()).then(result => {
+        IPC.saveSinglePackage(packageName()).then(result => {
             if (result.canceled) {
                 return;
             }
 
-            this.startDownload(result.filePath).then(success => {
+            startDownload(result.filePath).then(success => {
                 if (success) {
                     Notify.Now();
                 }
@@ -58,57 +47,57 @@ export class TitlePackage extends React.Component<TitlePackageProps, TitlePackag
                 IPC.errorDialog('Error Downloading Package', 'An error occurred while downloading the update package. Please try again later.', JSON.stringify(e));
             });
         });
-    }
+    };
 
-    private startDownload(downloadPath: string): Promise<boolean> {
-        this.setState({ isDownloading: true });
-        return Downloader.DownloadPackage(this.props.package, downloadPath, (percent: number) => {
-            this.setState({ percent: percent });
-        }).then(success => {
-            this.setState({ isDownloading: false, percent: 0, finished: success, downloadDir: undefined });
-            this.props.onDownloadFinished(this.props.package);
-            return success;
+    const startDownload = async (downloadPath: string): Promise<boolean> => {
+        SetIsDownloading(true);
+        const success = await Downloader.DownloadPackage(props.package, downloadPath, (percent: number) => {
+            SetDownloadPercent(percent);
         });
-    }
+        SetIsDownloading(false);
+        SetDownloadPercent(0);
+        SetFinished(success);
+        SetDownloadDir(undefined);
+        props.onDownloadFinished(props.package);
+        return success;
+    };
 
-    private packageName = (): string => {
-        const parts = this.props.package.url.split('/');
+    const packageName = (): string => {
+        const parts = props.package.url.split('/');
         const name = parts[parts.length-1];
         return name;
-    }
+    };
 
-    private button = () => {
+    const button = () => {
         let content = (
             <Icon.Label icon={<Icon.Download/>} label="Download" />
         );
-        if (this.state.isDownloading) {
+        if (IsDownloading) {
             content = (
-                <Progress value={this.state.percent} />
+                <Progress value={DownloadPercent} />
             );
-        } else if (this.state.finished) {
+        } else if (Finished) {
             content = (
                 <Icon.Label icon={<Icon.CheckCircle/>} label="Downloaded" />
             );
         }
 
         return (
-            <Button onClick={this.buttonClick} disabled={this.state.isDownloading||this.state.finished}>
+            <Button onClick={buttonClick} disabled={IsDownloading||Finished}>
                 {content}
             </Button>
         );
-    }
+    };
 
-    render(): JSX.Element {
-        return (
-            <div className="package">
-                <div className="info">
-                    <span className="property"><span className="label">Version: </span><span className="value">{ this.props.package.version }</span></span>
-                    <span className="property"><span className="label">Size: </span><span className="value">{ Formatter.BytesDecimal(this.props.package.size) }</span></span>
-                </div>
-                <div className="controls">
-                    { this.button() }
-                </div>
+    return (
+        <div className="package">
+            <div className="info">
+                <span className="property"><span className="label">Version: </span><span className="value">{ props.package.version }</span></span>
+                <span className="property"><span className="label">Size: </span><span className="value">{ Formatter.BytesDecimal(props.package.size) }</span></span>
             </div>
-        );
-    }
-}
+            <div className="controls">
+                { button() }
+            </div>
+        </div>
+    );
+};

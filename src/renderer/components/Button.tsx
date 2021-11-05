@@ -4,13 +4,12 @@ import '../../../css/Button.scss';
 export interface ButtonProps {
     onClick: () => (void);
     disabled?: boolean;
+    children?: React.ReactNode;
 }
-export class Button extends React.Component<ButtonProps, unknown> {
-    render(): JSX.Element {
-        return (
-            <button type="button" className="btn" onClick={this.props.onClick} disabled={this.props.disabled}>
-                {this.props.children}
-            </button>
-        );
-    }
-}
+export const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
+    return (
+        <button type="button" className="btn" onClick={props.onClick} disabled={props.disabled}>
+            {props.children}
+        </button>
+    );
+};

@@ -1,32 +1,26 @@
 import * as React from 'react';
-import '../../../css/TitleInput.scss';
 import { Icon } from './Icon';
+import '../../../css/TitleInput.scss';
 
 export interface TitleInputProps {
     onSubmit: (titleID: string) => void;
     loading: boolean;
 }
-interface TitleInputState {
-    titleID?: string;
-}
-export class TitleInput extends React.Component<TitleInputProps, TitleInputState> {
-    constructor(props: TitleInputProps) {
-        super(props);
-        this.state = {};
-    }
+export const TitleInput: React.FC<TitleInputProps> = (props: TitleInputProps) => {
+    const [TitleID, SetTitleID] = React.useState<string>();
 
-    private titleIDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const titleIDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement;
-        this.setState({ titleID: target.value });
-    }
+        SetTitleID(target.value);
+    };
 
-    private formSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const formSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        this.props.onSubmit(this.state.titleID);
-    }
+        props.onSubmit(TitleID);
+    };
 
-    private icon = () => {
-        if (!this.props.loading) {
+    const icon = () => {
+        if (!props.loading) {
             return null; 
         }
         return (
@@ -34,22 +28,20 @@ export class TitleInput extends React.Component<TitleInputProps, TitleInputState
                 <Icon.Spinner pulse />
             </div>
         );
-    }
+    };
 
-    render(): JSX.Element {
-        return (
-            <div className="title-id-input">
-                <form onSubmit={this.formSubmit}>
-                    <label>Game ID <small>Can be found on the side of any game package at the bottom</small></label>
-                    <div className="search-box">
-                        <div className="search-box-icon">
-                            <Icon.Search />
-                        </div>
-                        <input type="text" placeholder="Example: BCUS98114" onChange={this.titleIDChange} required disabled={this.props.loading}/>
-                        { this.icon() }
+    return (
+        <div className="title-id-input">
+            <form onSubmit={formSubmit}>
+                <label>Game ID <small>Can be found on the side of any game package at the bottom</small></label>
+                <div className="search-box">
+                    <div className="search-box-icon">
+                        <Icon.Search />
                     </div>
-                </form>
-            </div>
-        );
-    }
-}
+                    <input type="text" placeholder="Example: BCUS98114" onChange={titleIDChange} required disabled={props.loading}/>
+                    { icon() }
+                </div>
+            </form>
+        </div>
+    );
+};

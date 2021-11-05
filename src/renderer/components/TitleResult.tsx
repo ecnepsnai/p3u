@@ -1,78 +1,82 @@
 import * as React from 'react';
 import { Title, Package } from '../types/Title';
 import { TitlePackage } from './TitlePackage';
-import '../../../css/TitleResult.scss';
 import { Icon } from './Icon';
 import { Notify } from '../services/Notify';
 import { Button } from './Button';
 import { IPC } from '../services/IPC';
+import '../../../css/TitleResult.scss';
 
 export interface TitleResultProps {
     title: Title;
 }
-interface TitleResultState {
-    isDownloading?: boolean;
-    downloadToDir?: string;
-    finished?: boolean;
-}
-export class TitleResult extends React.Component<TitleResultProps, TitleResultState> {
-    constructor(props: TitleResultProps) {
-        super(props);
-        this.state = {};
-        this.props.title.packages.forEach(pkg => {
-            this.packageDownloaded[pkg.version] = false;
-        });
-    }
-    private packageDownloaded: {[id: string]: boolean} = {};
+export const TitleResult: React.FC<TitleResultProps> = (props: TitleResultProps) => {
+    const [IsDownloading, SetIsDownloading] = React.useState<boolean>();
+    const [DownloadDir, SetDownloadDir] = React.useState<string>();
+    const [Finished, SetFinished] = React.useState<boolean>();
+    const [PackagesDownloaded, SetPackagesDownloaded] = React.useState<{[id: string]: boolean}>({});
 
-    private downloadAll = () => {
+    React.useEffect(() => {
+        SetPackagesDownloaded(dp => {
+            props.title.packages.forEach(pkg => {
+                dp[pkg.version] = false;
+            });
+            return dp;
+        });
+    }, []);
+
+    const downloadAll = () => {
         IPC.saveMultiplePackages().then(results => {
             if (results.canceled) {
                 return;
             }
 
-            this.setState({ isDownloading: true, downloadToDir: results.filePaths[0] });
+            SetIsDownloading(true);
+            SetDownloadDir(results.filePaths[0]);
         }, e => {
             console.error(e);
             IPC.errorDialog('Error Downloading Packages', 'An error occurred while downloading the update package. Please try again later.', JSON.stringify(e));
         });
-    }
+    };
 
-    private onDownloadFinished = (pkg: Package) => {
-        this.packageDownloaded[pkg.version] = true;
-        this.checkAllFinished();
-    }
+    const onDownloadFinished = (pkg: Package) => {
+        SetPackagesDownloaded(dp => {
+            dp[pkg.version] = true;
+            return dp;
+        });
+        checkAllFinished();
+    };
 
-    private checkAllFinished = () => {
+    const checkAllFinished = () => {
         let allDone = true;
-        Object.keys(this.packageDownloaded).forEach(ver => {
-            if (!this.packageDownloaded[ver]) {
+        Object.keys(PackagesDownloaded).forEach(ver => {
+            if (!PackagesDownloaded[ver]) {
                 allDone = false;
             }
         });
         if (allDone) {
-            this.setState({ isDownloading: false, downloadToDir: undefined, finished: true });
+            SetIsDownloading(false);
+            SetDownloadDir(undefined);
+            SetFinished(true);
             Notify.Now();
         }
-    }
+    };
 
-    render(): JSX.Element {
-        return (
-            <div className="title-result">
-                <div className="title-title">
-                    <h2>{ this.props.title.name }</h2>
-                    <Button onClick={this.downloadAll} disabled={this.state.isDownloading||this.state.finished}>
-                        <Icon.Label icon={<Icon.Download/>} label="Download All" />
-                    </Button>
-                </div>
-                <div className="package-list">
-                    {
-                        this.props.title.packages.map(pkg => {
-                            return (<TitlePackage package={pkg} key={Math.random()} downloadToDir={this.state.downloadToDir} onDownloadFinished={this.onDownloadFinished} isDownloaded={this.state.finished}/>);
-                        })
-                    }
-                </div>
+    return (
+        <div className="title-result">
+            <div className="title-title">
+                <h2>{ props.title.name }</h2>
+                <Button onClick={downloadAll} disabled={IsDownloading||Finished}>
+                    <Icon.Label icon={<Icon.Download/>} label="Download All" />
+                </Button>
             </div>
-        );
-    }
-}
+            <div className="package-list">
+                {
+                    props.title.packages.map(pkg => {
+                        return (<TitlePackage package={pkg} key={Math.random()} downloadToDir={DownloadDir} onDownloadFinished={onDownloadFinished} isDownloaded={Finished}/>);
+                    })
+                }
+            </div>
+        </div>
+    );
+};

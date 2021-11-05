@@ -5,10 +5,8 @@ export interface ProgressProps {
     value: number;
     max?: number;
 }
-export class Progress extends React.Component<ProgressProps, unknown> {
-    render(): JSX.Element {
-        return (
-            <progress max={this.props.max||100} value={this.props.value} />
-        );
-    }
-}
+export const Progress: React.FC<ProgressProps> = (props: ProgressProps) => {
+    return (
+        <progress max={props.max || 100} value={props.value} />
+    );
+};
