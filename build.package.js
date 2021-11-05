@@ -44,6 +44,7 @@ function packageApp(platform, arch) {
         afterCopy: [
             (buildPath, electronVersion, platform, arch, callback) => {
                 copyFile(path.resolve('dist', 'index.html'), path.join(buildPath, 'dist', 'index.html'));
+                copyFile(path.resolve('dist', 'icons', 'P3U.png'), path.join(buildPath, 'dist', 'assets', 'P3U.png'))
                 callback();
             }
         ],
@@ -65,6 +66,7 @@ function packageApp(platform, arch) {
             /tsconfig.json/,
             /webpack.[a-z]+.js/,
             /.*map/,
+            /docker/,
         ]
     });
 }

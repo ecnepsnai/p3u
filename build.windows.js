@@ -1,5 +1,6 @@
 const windowsInstaller = require('electron-winstaller');
 const packager = require('./build.package.js');
+const info = require('./package.json');
 
 (async function main() {
     await packager.app('win32', 'x64');
@@ -10,7 +11,7 @@ const packager = require('./build.package.js');
         iconUrl: 'https://raw.githubusercontent.com/ecnepsnai/p3u/develop/icons/P3U.ico',
         setupIcon: 'icons\\P3U.ico',
         exe: 'p3u.exe',
-        setupExe: 'P3U_windows_x64.exe',
+        setupExe: 'P3U_windows_' + info.version + '_x64.exe',
         noMsi: true
     });
 })();
