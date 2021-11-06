@@ -24,7 +24,7 @@ export const AboutModal: React.FC = () => {
     return (<ErrorBoundary>
         <div className="modal about">
             <div className="image">
-                <img src="icons/P3U.png" alt="PlayStation 3 Updater" />
+                <img src="assets/P3U.png" alt="PlayStation 3 Updater" />
             </div>
             <div className="contents">
                 <h1>PlayStation 3 Updater</h1>

@@ -25,6 +25,7 @@ module.exports = {
             patterns: [
                 { from: 'node_modules/react/umd/react.' + sourceType + '.js', to: 'assets/js/' },
                 { from: 'node_modules/react-dom/umd/react-dom.' + sourceType + '.js', to: 'assets/js/' },
+                { from: 'icons/P3U.png', to: 'assets/' },
             ]
         }),
         new ESLintPlugin({
