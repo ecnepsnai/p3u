@@ -61,5 +61,5 @@ export class Menu {
 
     private static aboutMenuClicked = (target: Electron.BrowserWindow) => {
         new Dialog(target).showAboutModal();
-    }
+    };
 }

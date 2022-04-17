@@ -65,7 +65,7 @@ export class Lookup {
             });
             request.end();
         });
-    }
+    };
 
 
     public static async title(titleID: string): Promise<Title> {

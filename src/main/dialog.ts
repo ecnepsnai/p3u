@@ -88,7 +88,7 @@ export class Dialog {
         }
 
         return;
-    }
+    };
 
     /**
      * Prepare an electron modal browser window
