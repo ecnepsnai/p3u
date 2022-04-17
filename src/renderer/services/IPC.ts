@@ -1,3 +1,4 @@
+import { Options } from '../../shared/options';
 import { Title } from '../types/Title';
 import { RuntimeVersions } from '../types/Versions';
 
@@ -28,7 +29,9 @@ interface PreloadBridge {
     checkForUpdates: () => Promise<string>
     openInBrowser: (url: string) => void;
     fatalError: (error: unknown, errorInfo: unknown) => void;
-    runtimeVersions: () => Promise<RuntimeVersions>
+    runtimeVersions: () => Promise<RuntimeVersions>;
+    getOptions: () => Promise<Options>;
+    updateOptions: (options: Options) => Promise<void>;
 }
 
 interface preloadWindow {
@@ -104,5 +107,12 @@ export class IPC {
 
     public static runtimeVersions(): Promise<RuntimeVersions> {
         return IPC.preload.runtimeVersions();
+    }
+
+    public static getOptions(): Promise<Options> {
+        return IPC.preload.getOptions();
+    }
+    public static updateOptions(options: Options): Promise<void> {
+        return IPC.preload.updateOptions(options);
     }
 }

@@ -5,6 +5,8 @@ import { Lookup } from './lookup';
 import { Hash } from './hash';
 import { Updater } from './updater';
 import * as manifest from '../../package.json';
+import { OptionsManager } from './options_manager';
+import { Options } from '../shared/options';
 
 const browserWindowFromEvent = (sender: WebContents): BrowserWindow => {
     const windows = BrowserWindow.getAllWindows().filter(window => window.webContents.id === sender.id);
@@ -84,4 +86,13 @@ ipcMain.handle('runtime_versions', async () => {
         electron: electron,
         nodejs: nodejs,
     };
+});
+
+ipcMain.handle('get_options', async () => {
+    return OptionsManager.Get();
+});
+
+ipcMain.handle('update_options', async (event, args) => {
+    const newValue = args[0] as Options;
+    return OptionsManager.Set(newValue);
 });

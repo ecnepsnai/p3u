@@ -18,4 +18,6 @@ contextBridge.exposeInMainWorld('P3U', {
     openInBrowser: (url) => ipcRenderer.send('open_in_browser', [url]),
     fatalError: (error, errorInfo) => ipcRenderer.send('fatal_error', [error, errorInfo]),
     runtimeVersions: () => ipcRenderer.invoke('runtime_versions', []),
+    getOptions: () => ipcRenderer.invoke('get_options', []),
+    updateOptions: (options) => ipcRenderer.invoke('update_options', [options]),
 });
