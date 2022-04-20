@@ -28,7 +28,7 @@ export const AboutModal: React.FC = () => {
             </div>
             <div className="contents">
                 <h1>PlayStation 3 Updater</h1>
-                <p>Copyright &copy; <Link url="https://ianspence.com">Ian Spence</Link> 2021. Released under the <Link url="https://opensource.org/licenses/ISC">ISC license</Link>. Source code available at <Link url="https://github.com/ecnepsnai/p3u">github.com/ecnepsnai/p3u</Link>.</p>
+                <p>Copyright &copy; <Link url="https://ianspence.com">Ian Spence</Link> 2021-2022. Released under the <Link url="https://opensource.org/licenses/ISC">ISC license</Link>. Source code available at <Link url="https://github.com/ecnepsnai/p3u">github.com/ecnepsnai/p3u</Link>.</p>
                 <p>
                     Application: <strong>{Versions.app}</strong><br />
                     Electron: <strong>{Versions.electron}</strong><br />

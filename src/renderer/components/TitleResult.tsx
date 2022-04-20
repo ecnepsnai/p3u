@@ -26,13 +26,13 @@ export const TitleResult: React.FC<TitleResultProps> = (props: TitleResultProps)
     }, []);
 
     const downloadAll = () => {
-        IPC.saveMultiplePackages().then(results => {
-            if (results.canceled) {
+        IPC.saveMultiplePackages().then(result => {
+            if (!result) {
                 return;
             }
 
             SetIsDownloading(true);
-            SetDownloadDir(results.filePaths[0]);
+            SetDownloadDir(result);
         }, e => {
             console.error(e);
             IPC.errorDialog('Error Downloading Packages', 'An error occurred while downloading the update package. Please try again later.', JSON.stringify(e));

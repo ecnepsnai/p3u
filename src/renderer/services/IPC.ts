@@ -2,21 +2,11 @@ import { Options } from '../../shared/options';
 import { Title } from '../types/Title';
 import { RuntimeVersions } from '../types/Versions';
 
-interface SaveFileDialogResult {
-    canceled: boolean;
-    filePath: string;
-}
-
-interface SelectFolderDialogResult {
-    canceled: boolean;
-    filePaths: string[];
-}
-
 interface PreloadBridge {
     getTitle: () => Promise<string>
     lookupTitle: (titleID: string) => Promise<Title>
-    saveSinglePackage: (defaultName: string) => Promise<SaveFileDialogResult>
-    saveMultiplePackages: () => Promise<SelectFolderDialogResult>
+    saveSinglePackage: (defaultName: string) => Promise<string>
+    saveMultiplePackages: () => Promise<string>
     errorDialog: (title: string, body: string, detail?: string) => Promise<void>
     beep: () => void
     ping: (id: string) => void
@@ -49,11 +39,11 @@ export class IPC {
         return IPC.preload.lookupTitle(titleID);
     }
 
-    public static saveSinglePackage(defaultName: string): Promise<SaveFileDialogResult> {
+    public static saveSinglePackage(defaultName: string): Promise<string> {
         return IPC.preload.saveSinglePackage(defaultName);
     }
 
-    public static saveMultiplePackages(): Promise<SelectFolderDialogResult> {
+    public static saveMultiplePackages(): Promise<string> {
         return IPC.preload.saveMultiplePackages();
     }
 

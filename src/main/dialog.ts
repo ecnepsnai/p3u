@@ -1,6 +1,8 @@
-import { shell, BrowserWindow, dialog } from 'electron';
+import { shell, BrowserWindow, dialog, app } from 'electron';
 import { App } from './app';
 import { Paths } from './paths';
+import path = require('path');
+import { OptionsManager } from './options_manager';
 
 export class Dialog {
     private parent: BrowserWindow;
@@ -13,8 +15,12 @@ export class Dialog {
      * @param defaultName the name of the file to use by default
      * @returns A promise that resolves with the result of the save file dialog
      */
-    public async showPackageSaveDialog(defaultName: string): Promise<Electron.SaveDialogReturnValue> {
-        return dialog.showSaveDialog(this.parent, {
+    public async showPackageSaveDialog(defaultName: string): Promise<string> {
+        if (!OptionsManager.Get().AskForDownloadLocation) {
+            return Promise.resolve(path.join(app.getPath('downloads'), defaultName));
+        }
+
+        const result = await dialog.showSaveDialog(this.parent, {
             title: 'Save Update Package',
             buttonLabel: 'Save',
             defaultPath: defaultName,
@@ -23,18 +29,34 @@ export class Dialog {
                 extensions: ['pkg']
             }]
         });
+
+        if (result.canceled) {
+            return undefined;
+        }
+
+        return result.filePath;
     }
 
     /**
      * Show a select folder dialog for downloading multiple packages
      * @returns A promise that resolves with the result of the save file dialog
      */
-    public async showSelectFolderDialog(): Promise<Electron.OpenDialogReturnValue> {
-        return dialog.showOpenDialog(this.parent, {
+    public async showSelectFolderDialog(): Promise<string> {
+        if (!OptionsManager.Get().AskForDownloadLocation) {
+            return Promise.resolve(app.getPath('downloads'));
+        }
+
+        const result = await dialog.showOpenDialog(this.parent, {
             title: 'Select Download Location',
             buttonLabel: 'Download',
             properties: ['openDirectory', 'createDirectory']
         });
+
+        if (result.canceled || result.filePaths.length != 1) {
+            return undefined;
+        }
+
+        return result.filePaths[0];
     }
 
     /**
@@ -142,6 +164,18 @@ export class Dialog {
     public showAboutModal(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.electronModal('About', 270, 640).then(importWindow => {
+                importWindow.on('closed', () => {
+                    resolve();
+                });
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
+
+    public showOptionsModal(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.electronModal('Options', 270, 640).then(importWindow => {
                 importWindow.on('closed', () => {
                     resolve();
                 });

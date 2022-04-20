@@ -21,7 +21,14 @@ export class Menu {
                     { role: 'paste' },
                     { role: 'delete' },
                     { type: 'separator' },
-                    { role: 'selectAll' }
+                    { role: 'selectAll' },
+                    { type: 'separator' },
+                    {
+                        label: 'Options',
+                        click: () => {
+                            this.optionsMenuClicked(BrowserWindow.getFocusedWindow());
+                        }
+                    }
                 ]
             },
             {
@@ -61,5 +68,9 @@ export class Menu {
 
     private static aboutMenuClicked = (target: Electron.BrowserWindow) => {
         new Dialog(target).showAboutModal();
+    };
+
+    private static optionsMenuClicked = (target: Electron.BrowserWindow) => {
+        new Dialog(target).showOptionsModal();
     };
 }

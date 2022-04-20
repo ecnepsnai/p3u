@@ -34,11 +34,11 @@ export const TitlePackage: React.FC<TitlePackageProps> = (props: TitlePackagePro
         }
 
         IPC.saveSinglePackage(packageName()).then(result => {
-            if (result.canceled) {
+            if (!result) {
                 return;
             }
 
-            startDownload(result.filePath).then(success => {
+            startDownload(result).then(success => {
                 if (success) {
                     Notify.Now();
                 }
