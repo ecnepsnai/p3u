@@ -11,14 +11,30 @@
 }
 
 .dialog {
-    border: 1px solid #444444;
+    @media (prefers-color-scheme: light) {
+        border: 1px solid #cccccc;
+        background-color: #dddddd;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        border: 1px solid #444444;
+        background-color: #333333;
+    }
+
     border-radius: 5px;
-    background-color: #333333;
     width: 80%;
 
     .dialog-title {
         padding: 1rem;
-        border-bottom: 1px solid #444444;
+
+        @media (prefers-color-scheme: light) {
+            border-bottom: 1px solid #cccccc;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            border-bottom: 1px solid #444444;
+        }
+
         font-weight: bold;
     }
 
@@ -28,7 +44,15 @@
 
     .dialog-footer {
         padding: 1rem;
-        border-top: 1px solid #444444;
+
+        @media (prefers-color-scheme: light) {
+            border-top: 1px solid #cccccc;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            border-top: 1px solid #444444;
+        }
+
         display: flex;
         justify-content: flex-end;
     }
