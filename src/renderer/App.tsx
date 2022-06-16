@@ -6,6 +6,9 @@ import { API } from './services/API';
 import { IPC } from './services/IPC';
 import { Icon } from './components/Icon';
 import { Link } from './components/Link';
+import { GlobalDialogFrame } from './components/DialogFrame';
+import { AboutDialog } from './components/AboutDialog';
+import { OptionsDialog } from './components/OptionsDialog';
 import '../../css/App.scss';
 
 export const App: React.FC = () => {
@@ -23,6 +26,19 @@ export const App: React.FC = () => {
         IPC.checkForUpdates().then(newURL => {
             SetNewVersionURL(newURL);
         });
+
+        IPC.onShowAboutDialog(() => {
+            if (!GlobalDialogFrame.dialogOpen()) {
+                GlobalDialogFrame.showDialog(<AboutDialog />);
+            }
+        });
+
+        IPC.onShowOptionsDialog(() => {
+            if (!GlobalDialogFrame.dialogOpen()) {
+                GlobalDialogFrame.showDialog(<OptionsDialog />);
+            }
+        });
+
     }, []);
 
     const lookupTitle = (titleID: string) => {
@@ -82,6 +98,7 @@ export const App: React.FC = () => {
             <TitleInput onSubmit={lookupTitle} loading={TitleLoading} />
             {titleError()}
             {results()}
+            <GlobalDialogFrame />
         </div>
     );
 };

@@ -1,9 +1,8 @@
 import { Options } from '../../shared/options';
 import { Title } from '../types/Title';
-import { RuntimeVersions } from '../types/Versions';
+import { RuntimeVersions } from '../types/RuntimeVersions';
 
 interface PreloadBridge {
-    getTitle: () => Promise<string>
     lookupTitle: (titleID: string) => Promise<Title>
     saveSinglePackage: (defaultName: string) => Promise<string>
     saveMultiplePackages: () => Promise<string>
@@ -17,11 +16,13 @@ interface PreloadBridge {
     listenForDownloadFailed: (id: string, cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
     hashFile: (filePath: string) => Promise<string>
     checkForUpdates: () => Promise<string>
-    openInBrowser: (url: string) => void;
-    fatalError: (error: unknown, errorInfo: unknown) => void;
-    runtimeVersions: () => Promise<RuntimeVersions>;
-    getOptions: () => Promise<Options>;
-    updateOptions: (options: Options) => Promise<void>;
+    openInBrowser: (url: string) => void
+    fatalError: (error: unknown, errorInfo: unknown) => void
+    runtimeVersions: () => Promise<RuntimeVersions>
+    getOptions: () => Promise<Options>
+    updateOptions: (options: Options) => Promise<void>
+    onShowAboutDialog: (cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
+    onShowOptionsDialog: (cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void
 }
 
 interface preloadWindow {
@@ -30,10 +31,6 @@ interface preloadWindow {
 
 export class IPC {
     private static preload: PreloadBridge = (window as unknown as preloadWindow).P3U as PreloadBridge;
-
-    public static getTitle(): Promise<string> {
-        return IPC.preload.getTitle();
-    }
 
     public static lookupTitle(titleID: string): Promise<Title> {
         return IPC.preload.lookupTitle(titleID);
@@ -102,7 +99,16 @@ export class IPC {
     public static getOptions(): Promise<Options> {
         return IPC.preload.getOptions();
     }
+
     public static updateOptions(options: Options): Promise<void> {
         return IPC.preload.updateOptions(options);
+    }
+
+    public static onShowAboutDialog(cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void): void {
+        IPC.preload.onShowAboutDialog(cb);
+    }
+
+    public static onShowOptionsDialog(cb: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void): void {
+        IPC.preload.onShowOptionsDialog(cb);
     }
 }

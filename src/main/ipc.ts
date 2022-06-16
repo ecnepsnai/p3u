@@ -13,11 +13,6 @@ const browserWindowFromEvent = (sender: WebContents): BrowserWindow => {
     return windows[0];
 };
 
-ipcMain.handle('get_title', event => {
-    const window = browserWindowFromEvent(event.sender);
-    return Promise.resolve(window.title);
-});
-
 ipcMain.handle('lookup_title', async (event, args) => {
     event.sender.id;
     return Lookup.title(args[0]);

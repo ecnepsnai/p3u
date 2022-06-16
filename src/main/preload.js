@@ -1,7 +1,6 @@
 import { ipcRenderer, contextBridge } from 'electron';
 
 contextBridge.exposeInMainWorld('P3U', {
-    getTitle: () => ipcRenderer.invoke('get_title', []),
     lookupTitle: (titleID) => ipcRenderer.invoke('lookup_title', [titleID]),
     saveSinglePackage: (defaultName) => ipcRenderer.invoke('save_single_package', [defaultName]),
     saveMultiplePackages: () => ipcRenderer.invoke('save_multiple_packages', []),
@@ -20,4 +19,6 @@ contextBridge.exposeInMainWorld('P3U', {
     runtimeVersions: () => ipcRenderer.invoke('runtime_versions', []),
     getOptions: () => ipcRenderer.invoke('get_options', []),
     updateOptions: (options) => ipcRenderer.invoke('update_options', [options]),
+    onShowAboutDialog: (cb) => ipcRenderer.on('show_about_dialog', cb),
+    onShowOptionsDialog: (cb) => ipcRenderer.on('show_options_dialog', cb),
 });

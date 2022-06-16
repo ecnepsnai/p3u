@@ -1,5 +1,4 @@
 import { BrowserWindow, Menu as EMenu } from 'electron';
-import { Dialog } from './dialog';
 
 export class Menu {
     public static configureAppMenu(): void {
@@ -67,10 +66,10 @@ export class Menu {
     }
 
     private static aboutMenuClicked = (target: Electron.BrowserWindow) => {
-        new Dialog(target).showAboutModal();
+        target.webContents.send('show_about_dialog');
     };
 
     private static optionsMenuClicked = (target: Electron.BrowserWindow) => {
-        new Dialog(target).showOptionsModal();
+        target.webContents.send('show_options_dialog');
     };
 }
