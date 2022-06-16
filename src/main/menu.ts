@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu as EMenu } from 'electron';
+import { app, BrowserWindow, Menu as EMenu } from 'electron';
 
 export class Menu {
     public static configureAppMenu(): void {
@@ -20,14 +20,7 @@ export class Menu {
                     { role: 'paste' },
                     { role: 'delete' },
                     { type: 'separator' },
-                    { role: 'selectAll' },
-                    { type: 'separator' },
-                    {
-                        label: 'Options',
-                        click: () => {
-                            this.optionsMenuClicked(BrowserWindow.getFocusedWindow());
-                        }
-                    }
+                    { role: 'selectAll' }
                 ]
             },
             {
@@ -47,8 +40,37 @@ export class Menu {
                     { role: 'zoom' },
                     { role: 'close' }
                 ]
-            },
-            {
+            }
+        ];
+
+        if (process.platform === 'darwin') {
+            template.splice(0, 0, {
+                label: app.name,
+                submenu: [
+                    {
+                        label: 'About PlayStation 3 Updater',
+                        click: () => {
+                            this.aboutMenuClicked(BrowserWindow.getFocusedWindow());
+                        },
+                    },
+                    { type: 'separator' },
+                    {
+                        label: 'Preferences',
+                        click: () => {
+                            this.optionsMenuClicked(BrowserWindow.getFocusedWindow());
+                        },
+                    },
+                    { type: 'separator' },
+                    { role: 'services' },
+                    { type: 'separator' },
+                    { role: 'hide' },
+                    { role: 'unhide' },
+                    { type: 'separator' },
+                    { role: 'quit' }
+                ]
+            });
+        } else {
+            template.push({
                 label: 'Help',
                 submenu: [
                     {
@@ -58,8 +80,14 @@ export class Menu {
                         },
                     }
                 ]
-            }
-        ];
+            });
+            (template[1].submenu as Electron.MenuItemConstructorOptions[]).push({
+                label: 'Preferences',
+                click: () => {
+                    this.optionsMenuClicked(BrowserWindow.getFocusedWindow());
+                },
+            });
+        }
 
         const menu = EMenu.buildFromTemplate(template);
         EMenu.setApplicationMenu(menu);
